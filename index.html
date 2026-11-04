@@ -242,6 +242,11 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .pay-summary{background:var(--surface-2);border-radius:12px;padding:14px;margin-bottom:16px}
 .pay-summary .plate-badge{font-size:18px;padding:8px 14px;display:inline-block;margin-bottom:6px}
 .pay-washer{font-size:13px;color:var(--muted)}
+.pay-breakdown{background:var(--surface-2);border-radius:12px;padding:12px 14px;margin-bottom:16px}
+.pay-breakdown .row{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:13.5px;padding:5px 0;color:var(--muted)}
+.pay-breakdown .row > span:last-child{font-weight:700;color:var(--text);flex:0 0 auto}
+.pay-breakdown .row.total{border-top:1px solid var(--border);margin-top:6px;padding-top:10px;color:var(--text);font-size:14px;font-weight:600}
+.pay-breakdown .row.total strong{font-size:22px;font-weight:800;letter-spacing:-.02em;color:var(--text)}
 .pay-total{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:16px;font-size:14px}
 .pay-total strong{font-size:22px;font-weight:800;letter-spacing:-.02em}
 .tip-quick{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
@@ -504,11 +509,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
         <button type="button" class="seg" data-paymethod="electronic">Tarjeta</button>
       </div>
 
-      <div class="pay-total">
-        <span>Total a cobrar</span>
-        <strong id="payTotal">$0</strong>
-      </div>
-
       <label class="field-label" style="margin-top:0">Propina para el lavador (opcional)</label>
       <div class="tip-quick" id="tipQuick">
         <button type="button" data-tip="0" class="active">Sin tip</button>
@@ -517,6 +517,12 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
         <button type="button" data-tip="10000">$10.000</button>
       </div>
       <input type="number" id="tipInput" placeholder="Otro monto" min="0" step="500" inputmode="numeric">
+
+      <div class="pay-breakdown" style="margin-top:16px">
+        <div class="row"><span>Servicios</span><span id="paySubtotal">$0</span></div>
+        <div class="row"><span>Propina para el lavador</span><span id="payTipLine">$0</span></div>
+        <div class="row total"><span>Total a pagar</span><strong id="payTotal">$0</strong></div>
+      </div>
 
       <div class="hint" id="payCashHint" style="margin:10px 0 0"></div>
       <button type="button" class="btn btn-primary btn-block" id="confirmPay" style="margin-top:16px">Registrar cobro</button>
@@ -983,6 +989,30 @@ function handleVehicleAction(id, act){
 let payVehicleId = null;
 let currentPayMethod = 'cash';
 
+function getCurrentTip(){
+  return Math.max(0, Number($('#tipInput').value) || 0);
+}
+
+function updatePayTotals(){
+  const v = state.vehicles.find(x => x.id === payVehicleId);
+  if(!v) return;
+  const subtotal = Number(v.total) || 0;
+  const tip = getCurrentTip();
+  const total = subtotal + tip;
+
+  const subEl   = $('#paySubtotal');
+  const tipEl   = $('#payTipLine');
+  const totalEl = $('#payTotal');
+  if(subEl)   subEl.textContent   = fmtMoney(subtotal);
+  if(tipEl){
+    tipEl.textContent = tip > 0 ? '+ ' + fmtMoney(tip) : fmtMoney(0);
+    tipEl.style.color = tip > 0 ? 'var(--ok)' : '';
+  }
+  if(totalEl) totalEl.textContent = fmtMoney(total);
+
+  updatePayCashHint(total);
+}
+
 function openPayModal(id){
   const v = state.vehicles.find(x => x.id === id);
   if(!v) return;
@@ -991,26 +1021,30 @@ function openPayModal(id){
 
   $('#payPlate').textContent = v.plate;
   $('#payWasherInfo').textContent = v.washerName ? `Lavador: ${v.washerName}` : 'Sin lavador asignado';
-  $('#payTotal').textContent = fmtMoney(v.total);
   $('#tipInput').value = '';
   $$('#tipQuick button').forEach(b => b.classList.toggle('active', b.dataset.tip === '0'));
   $$('#payMethodSwitch .seg').forEach(b => b.classList.toggle('active', b.dataset.paymethod === 'cash'));
 
-  updatePayCashHint();
+  updatePayTotals();
   openModal('payModal');
 }
 
-function updatePayCashHint(){
+function updatePayCashHint(totalOverride){
   const hint = $('#payCashHint');
   if(!hint) return;
+  const v = state.vehicles.find(x => x.id === payVehicleId);
+  const total = (typeof totalOverride === 'number')
+    ? totalOverride
+    : ((Number(v && v.total) || 0) + getCurrentTip());
+
   if(!state.cash.isOpen){
-    hint.textContent = '⚠️ La caja está cerrada. El cobro no se registrará en caja.';
+    hint.textContent = `⚠️ La caja está cerrada. El cobro de ${fmtMoney(total)} no se registrará en caja.`;
     hint.style.color = 'var(--danger)';
   } else if(currentPayMethod === 'cash'){
-    hint.textContent = 'Pago en efectivo: sumará al efectivo físico de la caja.';
+    hint.textContent = `Pago en efectivo por ${fmtMoney(total)}: sumará al efectivo físico de la caja.`;
     hint.style.color = 'var(--ok)';
   } else {
-    hint.textContent = `${paymentMethodLabel(currentPayMethod)}: se registra como ingreso electrónico, no afecta el efectivo físico.`;
+    hint.textContent = `${paymentMethodLabel(currentPayMethod)} por ${fmtMoney(total)}: se registra como ingreso electrónico, no afecta el efectivo físico.`;
     hint.style.color = 'var(--muted)';
   }
 }
@@ -1018,28 +1052,36 @@ function updatePayCashHint(){
 function confirmPay(){
   const v = state.vehicles.find(x => x.id === payVehicleId);
   if(!v) return;
-  const tip = Math.max(0, Number($('#tipInput').value) || 0);
+  const tip = getCurrentTip();
   const pm = currentPayMethod;
+  const subtotal = Number(v.total) || 0;
+  const totalPaid = subtotal + tip;
 
   v.tip = tip;
+  v.totalPaid = totalPaid;
   v.paymentMethod = pm;
   v.paidAt = Date.now();
   v.completedAt = Date.now();
 
   if(state.cash.isOpen){
+    /* Movimiento del cobro: si hay propina se registra el total pagado y
+       la propina queda desglosada en un movimiento aparte para trazabilidad. */
     state.cash.movements.unshift({
-      id: uid(), type:'in', amount: v.total,
-      concept: `Cobro ${v.plate}`, plate: v.plate, vehicleId: v.id,
+      id: uid(), type:'in', amount: totalPaid,
+      concept: `Cobro ${v.plate}${tip > 0 ? ` (incluye tip ${fmtMoney(tip)})` : ''}`,
+      plate: v.plate, vehicleId: v.id,
       paymentMethod: pm,
       services: v.services.map(s=>s.name).join(' + ') || (v.type === 'parking' ? `Parqueadero ${v.parkingHours}h` : ''),
       serviceType: v.type === 'parking' ? 'Parqueadero' : 'Lavado',
       client: v.client, washerId: v.washerId, washerName: v.washerName,
-      vehicleTotal: v.total, tip: 0,
+      vehicleTotal: subtotal, tip: tip, totalPaid: totalPaid,
+      isTip: false,
       createdAt: Date.now()
     });
+    /* Movimiento informativo de la propina (no suma al saldo: el cobro ya la incluye) */
     if(tip > 0){
       state.cash.movements.unshift({
-        id: uid(), type:'in', amount: tip,
+        id: uid(), type:'info', amount: tip,
         concept: `Propina ${v.washerName || 'lavador'} · ${v.plate}`,
         plate: v.plate, vehicleId: v.id, isTip: true,
         paymentMethod: pm,
@@ -1060,7 +1102,7 @@ function confirmPay(){
   if(currentView === 'team') renderTeamView();
   updateTabs();
 
-  toast(`Cobro ${paymentMethodLabel(pm)}${tip>0?` + tip ${fmtMoney(tip)}`:''} ✅`);
+  toast(`Cobro ${paymentMethodLabel(pm)} ${fmtMoney(totalPaid)}${tip>0?` (tip ${fmtMoney(tip)})`:''} ✅`);
 }
 
 /* ============================================================
@@ -1069,6 +1111,7 @@ function confirmPay(){
 function computeCashTotals(c){
   let cashIn = 0, elecIn = 0, cashOut = 0, cashTips = 0, elecTips = 0;
   (c.movements || []).forEach(m => {
+    if(m.type === 'info') return; /* informativos: no afectan saldo */
     const amt = Number(m.amount) || 0;
     if(m.type === 'in'){
       const isCash = (m.paymentMethod === 'cash' || !m.paymentMethod);
@@ -1089,6 +1132,18 @@ function computeCashTotals(c){
   };
 }
 
+/* Suma de propinas registradas en la sesión (a partir de los cobros) */
+function computeSessionTips(c){
+  let cash = 0, elec = 0;
+  (c.movements || []).forEach(m => {
+    if(m.type !== 'info' || !m.isTip) return;
+    const amt = Number(m.amount) || 0;
+    if(m.paymentMethod === 'cash' || !m.paymentMethod) cash += amt;
+    else elec += amt;
+  });
+  return { cash, elec, total: cash + elec };
+}
+
 function openCashRegister(initialAmount){
   state.cash.isOpen = true;
   state.cash.openedAt = Date.now();
@@ -1103,14 +1158,15 @@ function openCashRegister(initialAmount){
 function closeCashRegister(){
   const c = state.cash;
   const t = computeCashTotals(c);
-  if(!confirm(`¿Cerrar la caja?\n\nEfectivo en caja: ${fmtMoney(t.physicalCash)}\nRecaudo electrónico: ${fmtMoney(t.electronic)}\n\nAl cerrar se descargarán automáticamente 2 archivos CSV.`)) return;
+  const tips = computeSessionTips(c);
+  if(!confirm(`¿Cerrar la caja?\n\nEfectivo en caja: ${fmtMoney(t.physicalCash)}\nRecaudo electrónico: ${fmtMoney(t.electronic)}\nPropinas: ${fmtMoney(tips.total)}\n\nAl cerrar se descargarán automáticamente 2 archivos CSV.`)) return;
 
   state.cash.lastClosed = {
     openedAt: c.openedAt,
     closedAt: Date.now(),
     initialAmount: c.initialAmount,
     cashIn: t.cashIn, elecIn: t.elecIn, cashOut: t.cashOut,
-    cashTips: t.cashTips, elecTips: t.elecTips,
+    cashTips: tips.cash, elecTips: tips.elec,
     physicalCash: t.physicalCash, electronic: t.electronic, total: t.total,
     movementCount: c.movements.length
   };
@@ -1120,7 +1176,6 @@ function closeCashRegister(){
   renderCashView(); updateTabs();
   toast('Caja cerrada · Exportando CSV…');
 
-  /* Auto-export de los 2 CSV */
   try {
     setTimeout(() => downloadCashCSV(), 150);
     setTimeout(() => downloadWashersCSV(), 800);
@@ -1153,6 +1208,18 @@ function movementRowHtml(m){
   const badge = (m.paymentMethod && m.paymentMethod !== 'cash')
     ? `<span class="pay-method-badge ${badgeCls}">${paymentMethodLabel(m.paymentMethod)}</span>`
     : '';
+
+  if(m.type === 'info'){
+    return `
+      <div class="movement tip info">
+        <div class="left">
+          <span class="concept">${esc(m.concept)} ${badge}</span>
+          <span class="meta">${fmtHour(m.createdAt)}${pmLabel} · incluida en el cobro</span>
+        </div>
+        <span class="amount" style="color:var(--muted)">${fmtMoney(m.amount)}</span>
+      </div>`;
+  }
+
   return `
     <div class="movement ${m.type} ${m.isTip?'tip':''}">
       <div class="left">
@@ -1208,6 +1275,7 @@ function renderCashView(){
   }
 
   const t = computeCashTotals(c);
+  const tips = computeSessionTips(c);
   const movementsHtml = c.movements.length
     ? c.movements.map(movementRowHtml).join('')
     : `<div class="empty-cash">Aún no hay movimientos.</div>`;
@@ -1225,8 +1293,9 @@ function renderCashView(){
     </div>
     <div class="summary-block">
       <div class="row"><span>Recaudo electrónico (no efectivo)</span><strong style="color:var(--accent)">${fmtMoney(t.electronic)}</strong></div>
-      <div class="row"><span>Propinas en efectivo</span><strong>${fmtMoney(t.cashTips)}</strong></div>
-      <div class="row"><span>Propinas electrónicas</span><strong>${fmtMoney(t.elecTips)}</strong></div>
+      <div class="row"><span>Propinas en efectivo</span><strong>${fmtMoney(tips.cash)}</strong></div>
+      <div class="row"><span>Propinas electrónicas</span><strong>${fmtMoney(tips.elec)}</strong></div>
+      <div class="row"><span>Total propinas (incluidas en cobros)</span><strong>${fmtMoney(tips.total)}</strong></div>
       <div class="row total"><span>Total general (efectivo + electrónico)</span><strong>${fmtMoney(t.total)}</strong></div>
     </div>
     <div class="cash-actions">
@@ -1370,7 +1439,7 @@ function buildCashCSV(){
   const headers = [
     'Fecha','Hora','Tipo','Concepto','Placa','Cliente','Lavador',
     'Tipo de servicio','Servicios contratados','Método de pago',
-    'Monto','Es propina','Total del servicio','Propina del servicio'
+    'Monto','Es propina','Total del servicio','Propina del servicio','Total pagado'
   ];
   const rows = [csvRow(headers)];
   const movements = [...(c.movements||[])].sort((a,b)=>a.createdAt - b.createdAt);
@@ -1378,10 +1447,18 @@ function buildCashCSV(){
   movements.forEach(m => {
     const v = findVehicleData(m);
     const d = new Date(m.createdAt);
+    const vehTotal = m.vehicleTotal != null ? Number(m.vehicleTotal)
+      : (v ? Number(v.total) || 0 : '');
+    const vehTip = m.tip != null ? Number(m.tip)
+      : (v ? Number(v.tip) || 0 : '');
+    const totalPaid = m.totalPaid != null ? Number(m.totalPaid)
+      : (v ? (Number(v.totalPaid != null ? v.totalPaid : (Number(v.total)||0) + (Number(v.tip)||0))) : '');
+    const tipo = m.type === 'in' ? 'Ingreso' : (m.type === 'out' ? 'Retiro' : 'Propina (informativo)');
+
     rows.push(csvRow([
       d.toLocaleDateString('es-CO'),
       d.toLocaleTimeString('es-CO', { hour:'2-digit', minute:'2-digit' }),
-      m.type === 'in' ? 'Ingreso' : 'Retiro',
+      tipo,
       m.concept || '',
       m.plate || (v && v.plate) || '',
       (v && v.client) || m.client || '',
@@ -1389,22 +1466,25 @@ function buildCashCSV(){
       m.serviceType || (v ? (v.type === 'parking' ? 'Parqueadero' : 'Lavado') : ''),
       m.services || servicesText(v) || '',
       paymentMethodLabel(m.paymentMethod || 'cash'),
-      (m.type === 'in' ? '' : '-') + (Number(m.amount) || 0),
+      (m.type === 'out' ? '-' : '') + (Number(m.amount) || 0),
       m.isTip ? 'Sí' : 'No',
-      v ? (Number(v.total) || 0) : '',
-      v ? (Number(v.tip) || 0) : ''
+      vehTotal,
+      vehTip,
+      totalPaid
     ]));
   });
 
   const totals = computeCashTotals(c);
+  const tips = computeSessionTips(c);
   rows.push('');
   rows.push(csvRow(['RESUMEN DE CAJA']));
   rows.push(csvRow(['Monto inicial (efectivo)', c.initialAmount || 0]));
   rows.push(csvRow(['Ingresos en efectivo', totals.cashIn]));
   rows.push(csvRow(['Ingresos electrónicos', totals.elecIn]));
   rows.push(csvRow(['Retiros', -totals.cashOut]));
-  rows.push(csvRow(['Propinas en efectivo', totals.cashTips]));
-  rows.push(csvRow(['Propinas electrónicas', totals.elecTips]));
+  rows.push(csvRow(['Propinas en efectivo (incluidas en cobros)', tips.cash]));
+  rows.push(csvRow(['Propinas electrónicas (incluidas en cobros)', tips.elec]));
+  rows.push(csvRow(['Total propinas', tips.total]));
   rows.push(csvRow(['Efectivo entregado', totals.physicalCash]));
   rows.push(csvRow(['Recaudo electrónico', totals.electronic]));
   rows.push(csvRow(['Total general', totals.total]));
@@ -1789,7 +1869,7 @@ document.addEventListener('click', e => {
   handleVehicleAction(card.dataset.id, btn.dataset.act);
 });
 
-/* Descargas CSV (delegación — funciona en Caja y Equipo) */
+/* Descargas CSV */
 document.addEventListener('click', e => {
   const btn = e.target.closest('[data-download]');
   if(!btn) return;
@@ -1798,7 +1878,7 @@ document.addEventListener('click', e => {
   else if(kind === 'washers-csv') downloadWashersCSV();
 });
 
-/* Abrir ajustes (delegación robusta) */
+/* Abrir ajustes */
 document.addEventListener('click', e => {
   const btn = e.target.closest('#settingsBtn');
   if(!btn) return;
@@ -1854,6 +1934,7 @@ $('#confirmMov').addEventListener('click', () => {
   addMovement(movementType, amt, concept);
 });
 
+/* Método de pago */
 $('#payMethodSwitch').addEventListener('click', e => {
   const b = e.target.closest('.seg');
   if(!b) return;
@@ -1861,15 +1942,23 @@ $('#payMethodSwitch').addEventListener('click', e => {
   $$('#payMethodSwitch .seg').forEach(x => x.classList.toggle('active', x === b));
   updatePayCashHint();
 });
+
+/* Propina: botones rápidos + input => recalculan el total a pagar */
 $('#tipQuick').addEventListener('click', e => {
   const b = e.target.closest('[data-tip]');
   if(!b) return;
   $('#tipInput').value = b.dataset.tip;
   $$('#tipQuick button').forEach(x => x.classList.toggle('active', x === b));
+  updatePayTotals();
 });
 $('#tipInput').addEventListener('input', () => {
-  $$('#tipQuick button').forEach(x => x.classList.remove('active'));
+  $$('#tipQuick button').forEach(x => {
+    const t = Number(x.dataset.tip);
+    x.classList.toggle('active', String(t) === String(Number($('#tipInput').value) || 0) && t > 0);
+  });
+  updatePayTotals();
 });
+
 $('#confirmPay').addEventListener('click', confirmPay);
 
 /* ============================================================
