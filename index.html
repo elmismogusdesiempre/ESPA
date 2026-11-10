@@ -42,12 +42,13 @@ body.has-summary main{padding-bottom:130px}
 .brand-text{min-width:0}
 .brand-text h1{font-size:16px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .brand-text p{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.header-actions{display:flex;gap:8px;flex:0 0 auto}
+.header-actions{display:flex;gap:6px;flex:0 0 auto}
 .icon-btn{width:40px;height:40px;border-radius:12px;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--muted);transition:.15s;position:relative;z-index:1}
 .icon-btn:hover{color:var(--text);border-color:var(--accent)}
 .icon-btn:active{transform:scale(.94)}
 .icon-btn.danger:hover{color:var(--danger);border-color:var(--danger)}
 .icon-btn.active{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+@media(max-width:400px){.icon-btn{width:36px;height:36px;border-radius:11px}.header-actions{gap:4px}}
 
 .container{max-width:920px;margin:0 auto;padding:14px 16px 0}
 .tabs{display:flex;gap:6px;background:var(--surface-2);padding:5px;border-radius:14px;border:1px solid var(--border);margin-bottom:14px;overflow-x:auto}
@@ -97,12 +98,25 @@ select option:disabled{color:var(--muted);opacity:.6}
 .service.selected .box{background:var(--accent);border-color:var(--accent)}
 .service.selected .box svg{opacity:1;transform:scale(1)}
 
-.loyalty-hint{margin-top:12px;padding:10px 12px;border-radius:10px;background:var(--surface-2);border:1px solid var(--border);font-size:13px;color:var(--muted);line-height:1.4}
+/* Loyalty */
+.loyalty-hint{margin-top:12px;padding:11px 13px;border-radius:10px;background:var(--surface-2);border:1px solid var(--border);font-size:13px;color:var(--muted);line-height:1.5}
 .loyalty-hint strong{color:var(--text)}
-.loyalty-hint .stars{color:var(--warn);font-size:15px;letter-spacing:1px}
+.loyalty-hint .stars{color:var(--warn);font-size:15px;letter-spacing:1px;word-break:break-word;font-weight:500}
 .free-wash-option{margin-top:10px;padding:11px 13px;border-radius:10px;border:1.5px solid var(--accent);background:var(--accent-soft);display:flex;align-items:center;gap:9px;cursor:pointer}
 .free-wash-option input{width:18px;height:18px;flex:0 0 auto}
 .free-wash-option span{font-size:13px;font-weight:600;color:var(--accent)}
+
+/* Loyalty card (resultado búsqueda) */
+.loyalty-card{background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:18px 16px;text-align:center}
+.loyalty-name{font-size:16px;font-weight:700;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stars-lg{color:var(--warn);font-size:22px;letter-spacing:2px;line-height:1.4;display:block;text-align:center;margin:8px 0;word-break:break-word;font-weight:500}
+@media(max-width:420px){.stars-lg{font-size:18px;letter-spacing:1px}}
+.loyalty-progress{font-size:13px;color:var(--muted)}
+.loyalty-progress strong{color:var(--text);font-weight:800}
+.loyalty-meta{display:grid;gap:8px;text-align:left;border-top:1px dashed var(--border);padding-top:12px;margin-top:14px}
+.loyalty-meta > div{display:flex;justify-content:space-between;font-size:13.5px;gap:10px}
+.loyalty-meta > div span:first-child{color:var(--muted)}
+.loyalty-meta > div span:last-child{font-weight:700}
 
 .summary{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--surface);border-top:1px solid var(--border);box-shadow:0 -10px 30px -22px rgba(0,0,0,.5);padding:11px 16px calc(11px + env(safe-area-inset-bottom));transform:translateY(115%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
 .summary.show{transform:none}
@@ -301,7 +315,10 @@ select option:disabled{color:var(--muted);opacity:.6}
       </div>
     </div>
     <div class="header-actions">
-      <button type="button" class="icon-btn" id="adminBtn" aria-label="Panel admin">
+      <button type="button" class="icon-btn" id="searchBtn" aria-label="Consultar cliente" title="Consultar cliente">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+      <button type="button" class="icon-btn" id="adminBtn" aria-label="Panel admin" title="Admin">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       </button>
       <button type="button" class="icon-btn" id="themeBtn" aria-label="Cambiar tema"></button>
@@ -411,6 +428,28 @@ select option:disabled{color:var(--muted);opacity:.6}
       <span class="summary-sub" id="sumTime">Sin servicios</span>
     </div>
     <button type="button" class="btn btn-primary" id="submitBtn">Registrar y avisar</button>
+  </div>
+</div>
+
+<!-- Modal: buscar cliente (header 🔍) -->
+<div class="modal" id="customerSearchModal">
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-panel small">
+    <div class="modal-head">
+      <h2>Consultar cliente</h2>
+      <button type="button" class="icon-btn" data-close aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p class="hint" style="margin-bottom:12px">Consulta la tarjeta de fidelidad de cualquier cliente por su WhatsApp.</p>
+      <label class="field-label">WhatsApp del cliente</label>
+      <div style="display:flex;gap:8px">
+        <input type="tel" id="searchPhoneInput" placeholder="300 123 4567" style="flex:1" autocomplete="off" inputmode="tel">
+        <button type="button" class="btn btn-soft" id="searchCustomerBtn">Buscar</button>
+      </div>
+      <div id="customerSearchResult" style="margin-top:16px"></div>
+    </div>
   </div>
 </div>
 
@@ -685,6 +724,7 @@ function loadState(){
       logo:null, theme:'light', accent:'#2563eb', currency:'$', countryCode:'57',
       parkingEnabled:true, parkingRate:5000, cashEnabled:true,
       adminPassword:'admin', enablePhotos:true,
+      loyaltyGoal:10,
       services: DEFAULT_SERVICES.map(s=>({...s})),
       washers: DEFAULT_WASHERS.map(w=>({...w}))
     },
@@ -697,8 +737,6 @@ function loadState(){
   const cash = (saved.cash && typeof saved.cash === 'object') ? {...base.cash, ...saved.cash} : base.cash;
   if(!Array.isArray(cash.movements)) cash.movements = [];
 
-  /* Fallback defensivo: si services o washers vienen vacíos desde el storage,
-     se usan los defaults para no dejar la app sin contenido. */
   const services = (Array.isArray(st.services) && st.services.length > 0)
     ? st.services
     : DEFAULT_SERVICES.map(s => ({...s}));
@@ -838,7 +876,6 @@ function renderWasherSelect(force = false){
   }
   sel.innerHTML = html;
 
-  /* Restaurar selección previa o autoseleccionar el primer disponible */
   const prev = force ? '' : sel.value;
   if(prev && available.some(a => a.w.id === prev)){
     sel.value = prev;
@@ -871,22 +908,32 @@ function renderWasherSelect(force = false){
 /* ============================================================
    FIDELIDAD
    ============================================================ */
+function getLoyaltyGoal(){
+  const v = Math.floor(Number(state.settings.loyaltyGoal) || 10);
+  return Math.max(1, Math.min(30, v));
+}
 function getLoyaltyInfo(phone){
-  if(!phone) return { totalWashes:0, stars:0, freeEarned:0, freeUsed:0, freeAvailable:0 };
+  const goal = getLoyaltyGoal();
+  if(!phone) return { totalWashes:0, stars:0, freeEarned:0, freeUsed:0, freeAvailable:0, goal };
   const key = String(phone).replace(/\D/g,'');
   const jobs = state.completedJobs.filter(j => String(j.phone||'').replace(/\D/g,'') === key);
   const paidJobs = jobs.filter(j => !j.isFreeWash);
   const freeUsed = jobs.filter(j => j.isFreeWash).length;
   const totalWashes = paidJobs.length;
-  const stars = totalWashes % 10;
-  const freeEarned = Math.floor(totalWashes / 10);
+  const stars = totalWashes % goal;
+  const freeEarned = Math.floor(totalWashes / goal);
   const freeAvailable = Math.max(0, freeEarned - freeUsed);
-  return { totalWashes, stars, freeEarned, freeUsed, freeAvailable };
+  return { totalWashes, stars, freeEarned, freeUsed, freeAvailable, goal };
+}
+function drawStars(stars, goal){
+  const s = Math.max(0, Math.min(goal, Math.floor(stars)));
+  return '★'.repeat(s) + '☆'.repeat(goal - s);
 }
 function updateLoyaltyHint(){
   const phone = $('#phoneInput').value.trim();
   const hint = $('#loyaltyHint');
   const freeOpt = $('#freeWashOption');
+  const fw = $('#freeWashCheck');
   if(!hint) return;
   if(!phone || phone.replace(/\D/g,'').length < 7){
     hint.hidden = true;
@@ -894,19 +941,76 @@ function updateLoyaltyHint(){
     return;
   }
   const loy = getLoyaltyInfo(phone);
+  const goal = loy.goal;
+  const starsStr = drawStars(loy.stars, goal);
   hint.hidden = false;
+
+  let body = `<span class="stars">${starsStr}</span> <strong>${loy.stars}/${goal}</strong> lavadas`;
   if(loy.totalWashes === 0 && loy.freeUsed === 0){
-    hint.innerHTML = '🆕 <strong>Primera visita.</strong> ¡Bienvenido!';
-    if(freeOpt) freeOpt.hidden = true;
-    draft.isFreeWash = false;
+    body += ' · 🆕 Primera visita';
   } else if(loy.freeAvailable > 0){
-    hint.innerHTML = `⭐ Tiene <strong>${loy.freeAvailable} lavada(s) gratis</strong> disponible(s).<br><span class="stars">${'★'.repeat(loy.stars)}${'☆'.repeat(10 - loy.stars)}</span> · ${loy.stars}/10`;
-    if(freeOpt){ freeOpt.hidden = false; $('#freeWashCount').textContent = loy.freeAvailable; }
+    body += `<br>🎁 <strong>${loy.freeAvailable} lavada(s) gratis</strong> disponible(s)`;
   } else {
-    hint.innerHTML = `<span class="stars">${'★'.repeat(loy.stars)}${'☆'.repeat(10 - loy.stars)}</span><br><strong>${loy.stars}/10</strong> lavadas. Le faltan ${10 - loy.stars} para su próxima gratis.`;
-    if(freeOpt) freeOpt.hidden = true;
-    draft.isFreeWash = false;
+    body += ` · faltan ${goal - loy.stars}`;
   }
+  hint.innerHTML = body;
+
+  if(freeOpt){
+    if(loy.freeAvailable > 0){
+      freeOpt.hidden = false;
+      $('#freeWashCount').textContent = loy.freeAvailable;
+      if(fw) fw.checked = draft.isFreeWash;
+    } else {
+      freeOpt.hidden = true;
+      draft.isFreeWash = false;
+      if(fw) fw.checked = false;
+    }
+  }
+}
+
+/* ============================================================
+   BÚSQUEDA DE CLIENTE (compartida: header modal + admin)
+   ============================================================ */
+function searchCustomer(phone, resultEl){
+  if(!resultEl) return;
+  const raw = String(phone || '').trim();
+  const key = raw.replace(/\D/g,'');
+  if(key.length < 7){
+    resultEl.innerHTML = '<p class="hint" style="text-align:center;padding:10px 0">Escribe un número de teléfono completo.</p>';
+    return;
+  }
+  const jobs = state.completedJobs.filter(j => String(j.phone||'').replace(/\D/g,'') === key);
+  const loy = getLoyaltyInfo(raw);
+  const goal = loy.goal;
+  if(jobs.length === 0 && loy.totalWashes === 0){
+    resultEl.innerHTML = '<p class="hint" style="text-align:center;padding:10px 0">No hay historial para este número.</p>';
+    return;
+  }
+  const name = (jobs[0] && jobs[0].client) || '—';
+  const starsStr = drawStars(loy.stars, goal);
+
+  let html = `
+    <div class="loyalty-card">
+      <div class="loyalty-name">${esc(name)}</div>
+      <span class="stars-lg">${starsStr}</span>
+      <div class="loyalty-progress"><strong>${loy.stars}/${goal}</strong> lavadas</div>
+      <div class="loyalty-meta">
+        <div><span>Lavadas pagas</span><span>${loy.totalWashes}</span></div>
+        <div><span>Gratis disponibles</span><span style="color:var(--ok);font-weight:800">${loy.freeAvailable}</span></div>
+        <div><span>Gratis usadas</span><span>${loy.freeUsed}</span></div>
+      </div>
+    </div>`;
+
+  if(jobs.length){
+    html += `<p class="hint" style="margin-top:14px;font-size:12px"><strong>Últimas visitas:</strong></p>`;
+    jobs.slice(0, 10).forEach(j => {
+      const d = j.completedAt || j.paidAt;
+      html += `<div class="admin-row" style="font-size:12px">
+        <span class="lbl">${fmtDateTime(d)} · ${esc(j.plate)}${j.isFreeWash ? ' ⭐ gratis' : ''}</span>
+        <span class="val">${fmtMoney(j.totalPaid != null ? j.totalPaid : j.total)}</span></div>`;
+    });
+  }
+  resultEl.innerHTML = html;
 }
 
 /* ============================================================
@@ -971,8 +1075,8 @@ function switchView(v){
 
   if(v === 'checkin'){
     updateSummary();
-    renderServicesGrid();       /* re-render defensivo */
-    renderWasherSelect(false);  /* re-render defensivo */
+    renderServicesGrid();
+    renderWasherSelect(false);
     updateLoyaltyHint();
   }
   if(v === 'vehicles') renderVehicles();
@@ -1061,6 +1165,7 @@ function openWhatsApp(phone, text){
   if(!w) window.location.href = url;
 }
 function getLoyaltyMessageLine(v){
+  const goal = getLoyaltyGoal();
   if(v.isFreeWash){
     const loy = getLoyaltyInfo(v.phone);
     const remaining = Math.max(0, loy.freeAvailable - 1);
@@ -1070,10 +1175,10 @@ function getLoyaltyMessageLine(v){
   }
   const loy = getLoyaltyInfo(v.phone);
   const willBeNumber = loy.stars + 1;
-  if(willBeNumber >= 10){
-    return `⭐ ¡Esta es tu lavada #10! Ganaste una *lavada gratis* para tu próxima visita. 🎉`;
+  if(willBeNumber >= goal){
+    return `⭐ ¡Esta es tu lavada #${goal}! Ganaste una *lavada gratis* para tu próxima visita. 🎉`;
   }
-  return `⭐ Tarjeta de fidelidad: ${willBeNumber}/10 lavadas. Te faltan ${10 - willBeNumber} para tu lavada gratis.`;
+  return `⭐ Tarjeta de fidelidad: ${willBeNumber}/${goal} lavadas. Te faltan ${goal - willBeNumber} para tu lavada gratis.`;
 }
 function buildCheckinMessage(v){
   const s = state.settings;
@@ -1720,12 +1825,13 @@ function renderAdminDashboard(){
   html += `<div class="card">
     <h3 class="card-title">Buscar cliente por WhatsApp</h3>
     <div style="display:flex;gap:8px">
-      <input type="tel" id="adminSearchPhone" placeholder="300 123 4567" style="flex:1">
+      <input type="tel" id="adminSearchPhone" placeholder="300 123 4567" style="flex:1" autocomplete="off" inputmode="tel">
       <button type="button" class="btn btn-soft btn-sm" id="adminSearchBtn">Buscar</button>
     </div>
     <div id="adminSearchResult" style="margin-top:12px"></div>
   </div>`;
 
+  const goal = getLoyaltyGoal();
   html += `<div class="card">
     <h3 class="card-title">Configuración admin</h3>
     <label class="field-label" style="display:flex;align-items:center;gap:9px;margin-top:0">
@@ -1733,6 +1839,12 @@ function renderAdminDashboard(){
       <span>Permitir fotos del auto listo</span>
     </label>
     <p class="hint" style="margin-top:4px;font-size:12px">Cuando está activo, al marcar "Auto listo" se abre un panel para tomar 1-3 fotos y enviarlas al cliente por WhatsApp.</p>
+
+    <label class="field-label">Meta de lavadas para lavada gratis</label>
+    <input type="number" id="adminLoyaltyGoal" min="1" max="30" value="${goal}" inputmode="numeric">
+    <p class="hint" style="margin-top:4px;font-size:12px">Por defecto 10. Cámbiala para promociones especiales (ej. 5 en Navidad).</p>
+    <button type="button" class="btn btn-soft btn-block btn-sm" id="adminSaveLoyaltyGoalBtn" style="margin-top:8px">Guardar meta</button>
+
     <label class="field-label">Contraseña admin</label>
     <input type="password" id="adminNewPassword" placeholder="Nueva contraseña">
     <button type="button" class="btn btn-soft btn-block btn-sm" id="adminChangePasswordBtn" style="margin-top:8px">Actualizar contraseña</button>
@@ -1751,6 +1863,17 @@ function wireAdminEvents(){
       toast(e.target.checked ? 'Fotos activadas' : 'Fotos desactivadas');
     });
   }
+  const saveGoal = $('#adminSaveLoyaltyGoalBtn');
+  if(saveGoal){
+    saveGoal.addEventListener('click', () => {
+      const v = parseInt($('#adminLoyaltyGoal').value, 10);
+      if(!v || v < 1 || v > 30){ toast('Meta debe estar entre 1 y 30'); return; }
+      state.settings.loyaltyGoal = v;
+      save();
+      toast(`Meta actualizada a ${v} lavadas`);
+      renderAdminDashboard();
+    });
+  }
   const chPwd = $('#adminChangePasswordBtn');
   if(chPwd){
     chPwd.addEventListener('click', () => {
@@ -1763,41 +1886,23 @@ function wireAdminEvents(){
     });
   }
   const searchBtn = $('#adminSearchBtn');
-  if(searchBtn) searchBtn.addEventListener('click', adminSearchCustomer);
-  const searchInp = $('#adminSearchPhone');
-  if(searchInp) searchInp.addEventListener('keypress', e => { if(e.key === 'Enter') adminSearchCustomer(); });
-  const lo1 = $('#adminLogoutBottom');
-  if(lo1) lo1.addEventListener('click', adminLogout);
-}
-function adminSearchCustomer(){
-  const phone = ($('#adminSearchPhone').value || '').trim();
-  const result = $('#adminSearchResult');
-  if(!phone || phone.replace(/\D/g,'').length < 7){
-    result.innerHTML = '<p class="hint">Escribe un número de teléfono completo.</p>';
-    return;
-  }
-  const key = phone.replace(/\D/g,'');
-  const jobs = state.completedJobs.filter(j => String(j.phone||'').replace(/\D/g,'') === key);
-  const loy = getLoyaltyInfo(phone);
-  if(jobs.length === 0 && loy.totalWashes === 0){
-    result.innerHTML = '<p class="hint">No hay historial para este número.</p>';
-    return;
-  }
-  const name = (jobs[0] && jobs[0].client) || '—';
-  let html = `
-    <div class="admin-row"><span class="lbl">Cliente</span><span class="val">${esc(name)}</span></div>
-    <div class="admin-row"><span class="lbl">Lavadas pagas</span><span class="val">${loy.totalWashes}</span></div>
-    <div class="admin-row"><span class="lbl">Estrellas actuales</span><span class="val">${loy.stars}/10</span></div>
-    <div class="admin-row"><span class="lbl">Lavadas gratis usadas</span><span class="val">${loy.freeUsed}</span></div>
-    <div class="admin-row big"><span class="lbl">Lavadas gratis disponibles</span><span class="val saldo-pos">${loy.freeAvailable}</span></div>`;
-  if(jobs.length){
-    html += `<p class="hint" style="margin-top:12px;font-size:12px"><strong>Últimas visitas:</strong></p>`;
-    jobs.slice(0, 8).forEach(j => {
-      const d = j.completedAt || j.paidAt;
-      html += `<div class="admin-row" style="font-size:12px"><span class="lbl">${fmtDateTime(d)} · ${esc(j.plate)}${j.isFreeWash ? ' ⭐ gratis' : ''}</span><span class="val">${fmtMoney(j.totalPaid != null ? j.totalPaid : j.total)}</span></div>`;
+  if(searchBtn){
+    searchBtn.addEventListener('click', () => {
+      const phone = ($('#adminSearchPhone').value || '').trim();
+      searchCustomer(phone, $('#adminSearchResult'));
     });
   }
-  result.innerHTML = html;
+  const searchInp = $('#adminSearchPhone');
+  if(searchInp){
+    searchInp.addEventListener('keypress', e => {
+      if(e.key === 'Enter'){
+        const phone = ($('#adminSearchPhone').value || '').trim();
+        searchCustomer(phone, $('#adminSearchResult'));
+      }
+    });
+  }
+  const lo1 = $('#adminLogoutBottom');
+  if(lo1) lo1.addEventListener('click', adminLogout);
 }
 function adminLogout(){
   adminAuthed = false;
@@ -2133,6 +2238,20 @@ $('#parkHours').addEventListener('input', e => {
   updateSummary();
 });
 $('#submitBtn').addEventListener('click', submitCheckin);
+
+/* Botón 🔍 del header — siempre visible */
+$('#searchBtn').addEventListener('click', () => {
+  $('#searchPhoneInput').value = '';
+  $('#customerSearchResult').innerHTML = '<p class="hint" style="text-align:center;padding:20px 0">Escribe el número y pulsa Buscar.</p>';
+  openModal('customerSearchModal');
+});
+$('#searchCustomerBtn').addEventListener('click', () => {
+  const phone = $('#searchPhoneInput').value;
+  searchCustomer(phone, $('#customerSearchResult'));
+});
+$('#searchPhoneInput').addEventListener('keypress', e => {
+  if(e.key === 'Enter') $('#searchCustomerBtn').click();
+});
 
 document.addEventListener('click', e => {
   const btn = e.target.closest('[data-act]');
