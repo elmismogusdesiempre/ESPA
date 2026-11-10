@@ -68,11 +68,16 @@ input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--a
 input[type=number]{-moz-appearance:textfield}
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+select optgroup{font-weight:700;color:var(--text)}
+select option{padding:8px}
+select option:disabled{color:var(--muted);opacity:.6}
 .plate-input{text-align:center;text-transform:uppercase;font-size:24px;font-weight:800;letter-spacing:.12em;padding:14px;background:var(--surface-2)}
 .grid-2{display:grid;grid-template-columns:1fr;gap:0 12px}
 @media(min-width:560px){.grid-2{grid-template-columns:1fr 1fr}}
 .hint{font-size:13px;color:var(--muted)}
 .hint strong{color:var(--text)}
+.washer-hint{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.35}
+.washer-hint.warn{color:var(--warn)}
 
 .segmented{display:flex;gap:5px;background:var(--surface-2);padding:4px;border-radius:12px;border:1px solid var(--border);margin-bottom:16px}
 .seg{flex:1;border:0;background:transparent;color:var(--muted);font-weight:600;font-size:13px;padding:10px 4px;border-radius:9px;cursor:pointer;transition:.18s;white-space:nowrap}
@@ -200,7 +205,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .team-stats span:first-child{color:var(--muted)}
 .team-stats span:last-child{font-weight:700}
 
-/* ADMIN */
 .admin-hero{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}
 .admin-hero .label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px}
 .admin-hero .amount{font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
@@ -223,7 +227,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .auth-hero h2{font-size:20px;margin-bottom:8px}
 .auth-hero p{font-size:14px;color:var(--muted);margin-bottom:20px}
 
-/* MODALES */
 .modal{position:fixed;inset:0;z-index:100;display:none;align-items:flex-end;justify-content:center}
 .modal.open{display:flex}
 .modal-backdrop{position:absolute;inset:0;background:rgba(6,11,20,.55);backdrop-filter:blur(3px);animation:fadeIn .2s}
@@ -336,6 +339,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
       </label>
       <label class="field-label">Lavador asignado</label>
       <select id="washerSelect"></select>
+      <div id="washerHint" class="washer-hint" hidden></div>
     </div>
 
     <div class="card">
@@ -410,7 +414,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
   </div>
 </div>
 
-<!-- AJUSTES -->
 <div class="modal" id="settingsModal">
   <div class="modal-backdrop" data-close></div>
   <div class="modal-panel">
@@ -495,7 +498,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
   </div>
 </div>
 
-<!-- ABRIR CAJA -->
 <div class="modal" id="openCashModal">
   <div class="modal-backdrop" data-close></div>
   <div class="modal-panel small">
@@ -514,7 +516,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
   </div>
 </div>
 
-<!-- MOVIMIENTO -->
 <div class="modal" id="movementModal">
   <div class="modal-backdrop" data-close></div>
   <div class="modal-panel small">
@@ -539,7 +540,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
   </div>
 </div>
 
-<!-- ADELANTO -->
 <div class="modal" id="advanceModal">
   <div class="modal-backdrop" data-close></div>
   <div class="modal-panel small">
@@ -562,7 +562,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
   </div>
 </div>
 
-<!-- FOTOS AUTO LISTO -->
 <div class="modal" id="photoModal">
   <div class="modal-backdrop" data-close></div>
   <div class="modal-panel small">
@@ -579,6 +578,49 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
       <button type="button" class="btn btn-ghost btn-block btn-sm" id="addPhotoBtn" style="margin-bottom:10px">📷 Añadir foto</button>
       <button type="button" class="btn btn-primary btn-block" id="confirmReadyBtn">Marcar listo y avisar</button>
       <p class="hint" style="text-align:center;margin-top:10px;font-size:12px">Omitir fotos es válido — se enviará el mensaje sin imágenes.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="payModal">
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-panel small">
+    <div class="modal-head">
+      <h2>Cobro y entrega</h2>
+      <button type="button" class="icon-btn" data-close aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="pay-summary">
+        <span class="plate-badge" id="payPlate">ABC123</span>
+        <div class="pay-washer" id="payWasherInfo"></div>
+      </div>
+
+      <label class="field-label" style="margin-top:0">Método de pago</label>
+      <div class="segmented" id="payMethodSwitch">
+        <button type="button" class="seg active" data-paymethod="cash">Efectivo</button>
+        <button type="button" class="seg" data-paymethod="transfer">Transfer.</button>
+        <button type="button" class="seg" data-paymethod="electronic">Tarjeta</button>
+      </div>
+
+      <label class="field-label" style="margin-top:0">Propina para el lavador (opcional)</label>
+      <div class="tip-quick" id="tipQuick">
+        <button type="button" data-tip="0" class="active">Sin tip</button>
+        <button type="button" data-tip="2000">$2.000</button>
+        <button type="button" data-tip="5000">$5.000</button>
+        <button type="button" data-tip="10000">$10.000</button>
+      </div>
+      <input type="number" id="tipInput" placeholder="Otro monto" min="0" step="500" inputmode="numeric">
+
+      <div class="pay-breakdown" style="margin-top:16px">
+        <div class="row"><span>Servicios</span><span id="paySubtotal">$0</span></div>
+        <div class="row"><span>Propina para el lavador</span><span id="payTipLine">$0</span></div>
+        <div class="row total"><span>Total a pagar</span><strong id="payTotal">$0</strong></div>
+      </div>
+
+      <div class="hint" id="payCashHint" style="margin:10px 0 0"></div>
+      <button type="button" class="btn btn-primary btn-block" id="confirmPay" style="margin-top:16px">Registrar cobro</button>
     </div>
   </div>
 </div>
@@ -655,12 +697,17 @@ function loadState(){
   const cash = (saved.cash && typeof saved.cash === 'object') ? {...base.cash, ...saved.cash} : base.cash;
   if(!Array.isArray(cash.movements)) cash.movements = [];
 
+  /* Fallback defensivo: si services o washers vienen vacíos desde el storage,
+     se usan los defaults para no dejar la app sin contenido. */
+  const services = (Array.isArray(st.services) && st.services.length > 0)
+    ? st.services
+    : DEFAULT_SERVICES.map(s => ({...s}));
+  const washers = (Array.isArray(st.washers) && st.washers.length > 0)
+    ? st.washers
+    : DEFAULT_WASHERS.map(w => ({...w}));
+
   return {
-    settings: {
-      ...base.settings, ...st,
-      services: (Array.isArray(st.services) && st.services.length) ? st.services : base.settings.services,
-      washers:  Array.isArray(st.washers) ? st.washers : base.settings.washers
-    },
+    settings: { ...base.settings, ...st, services, washers },
     vehicles: Array.isArray(saved.vehicles) ? saved.vehicles : [],
     completedJobs: Array.isArray(saved.completedJobs) ? saved.completedJobs : [],
     cashSessions: Array.isArray(saved.cashSessions) ? saved.cashSessions : [],
@@ -730,16 +777,17 @@ function renderBrand(){
    ============================================================ */
 function renderServicesGrid(){
   const grid = $('#servicesGrid');
-  const list = state.settings.services;
+  if(!grid) return;
+  const list = Array.isArray(state.settings.services) ? state.settings.services : [];
   if(!list.length){
     grid.innerHTML = `<p class="hint">No hay servicios configurados. Agrégalos en Ajustes.</p>`;
     return;
   }
-  grid.innerHTML = list.map(s=>{
+  grid.innerHTML = list.map(s => {
     const sel = draft.services.has(s.id);
     return `
-      <label class="service ${sel?'selected':''}">
-        <input type="checkbox" data-id="${esc(s.id)}" ${sel?'checked':''}>
+      <label class="service ${sel ? 'selected' : ''}">
+        <input type="checkbox" data-id="${esc(s.id)}" ${sel ? 'checked' : ''}>
         <span class="box">${ICON.check}</span>
         <span class="service-body">
           <span class="service-name">${esc(s.name)}</span>
@@ -750,30 +798,74 @@ function renderServicesGrid(){
 }
 
 /* ============================================================
-   LAVADORES
+   LAVADORES — disponibles vs. ocupados
    ============================================================ */
 function renderWasherSelect(force = false){
   const sel = $('#washerSelect');
+  const hint = $('#washerHint');
   if(!sel) return;
-  const prev = force ? '' : sel.value;
-  const washers = state.settings.washers;
+
+  const washers = Array.isArray(state.settings.washers) ? state.settings.washers : [];
   if(!washers.length){
     sel.innerHTML = '<option value="">Sin lavadores — agrégalos en Ajustes</option>';
     sel.disabled = true;
+    if(hint){ hint.hidden = false; hint.className = 'washer-hint warn'; hint.textContent = 'Debes agregar al menos un lavador en Ajustes para poder asignar.'; }
     return;
   }
   sel.disabled = false;
-  const counts = washers.map(w => ({
+
+  const withLoad = washers.map(w => ({
     w,
-    active: state.vehicles.filter(v => v.washerId === w.id && v.status !== 'ready').length
-  })).sort((a,b) => a.active - b.active);
-  const suggested = counts[0]?.w.id;
-  sel.innerHTML = '<option value="">Sin asignar</option>' + counts.map(({w, active}) => {
-    const sug = w.id === suggested ? ' · sugerido' : '';
-    return `<option value="${esc(w.id)}">${esc(w.name)} (${active} en bahía)${sug}</option>`;
-  }).join('');
-  if(prev && washers.some(w => w.id === prev)) sel.value = prev;
-  else if(suggested) sel.value = suggested;
+    busyCount: state.vehicles.filter(v => v.washerId === w.id && v.status === 'in').length
+  }));
+  const available = withLoad.filter(x => x.busyCount === 0).sort((a,b) => a.w.name.localeCompare(b.w.name));
+  const busy = withLoad.filter(x => x.busyCount > 0).sort((a,b) => a.busyCount - b.busyCount || a.w.name.localeCompare(b.w.name));
+  const allBusy = available.length === 0;
+
+  let html = '<option value="">— Sin asignar —</option>';
+  if(available.length){
+    html += '<optgroup label="✅ Disponibles">';
+    available.forEach(({w}) => { html += `<option value="${esc(w.id)}">${esc(w.name)}</option>`; });
+    html += '</optgroup>';
+  }
+  if(busy.length){
+    html += `<optgroup label="${allBusy ? '⚠️ Todos ocupados' : '⏳ Ocupados'}">`;
+    busy.forEach(({w, busyCount}) => {
+      const dis = allBusy ? '' : 'disabled';
+      html += `<option value="${esc(w.id)}" ${dis}>${esc(w.name)} · ${busyCount} en bahía</option>`;
+    });
+    html += '</optgroup>';
+  }
+  sel.innerHTML = html;
+
+  /* Restaurar selección previa o autoseleccionar el primer disponible */
+  const prev = force ? '' : sel.value;
+  if(prev && available.some(a => a.w.id === prev)){
+    sel.value = prev;
+  } else if(available.length > 0){
+    sel.value = available[0].w.id;
+  } else {
+    sel.value = '';
+  }
+
+  if(hint){
+    if(allBusy){
+      hint.hidden = false;
+      hint.className = 'washer-hint warn';
+      hint.textContent = 'Todos los lavadores tienen auto en bahía. Puedes dejar sin asignar o forzar uno ocupado.';
+    } else if(available.length === 1){
+      hint.hidden = false;
+      hint.className = 'washer-hint';
+      hint.textContent = `Solo ${available[0].w.name} está disponible ahora. Los demás están ocupados.`;
+    } else if(busy.length > 0){
+      hint.hidden = false;
+      hint.className = 'washer-hint';
+      hint.textContent = `${available.length} disponible(s) · ${busy.length} ocupado(s). Los ocupados no se pueden elegir hasta que terminen.`;
+    } else {
+      hint.hidden = true;
+      hint.textContent = '';
+    }
+  }
 }
 
 /* ============================================================
@@ -791,7 +883,6 @@ function getLoyaltyInfo(phone){
   const freeAvailable = Math.max(0, freeEarned - freeUsed);
   return { totalWashes, stars, freeEarned, freeUsed, freeAvailable };
 }
-
 function updateLoyaltyHint(){
   const phone = $('#phoneInput').value.trim();
   const hint = $('#loyaltyHint');
@@ -804,17 +895,13 @@ function updateLoyaltyHint(){
   }
   const loy = getLoyaltyInfo(phone);
   hint.hidden = false;
-
   if(loy.totalWashes === 0 && loy.freeUsed === 0){
     hint.innerHTML = '🆕 <strong>Primera visita.</strong> ¡Bienvenido!';
     if(freeOpt) freeOpt.hidden = true;
     draft.isFreeWash = false;
   } else if(loy.freeAvailable > 0){
     hint.innerHTML = `⭐ Tiene <strong>${loy.freeAvailable} lavada(s) gratis</strong> disponible(s).<br><span class="stars">${'★'.repeat(loy.stars)}${'☆'.repeat(10 - loy.stars)}</span> · ${loy.stars}/10`;
-    if(freeOpt){
-      freeOpt.hidden = false;
-      $('#freeWashCount').textContent = loy.freeAvailable;
-    }
+    if(freeOpt){ freeOpt.hidden = false; $('#freeWashCount').textContent = loy.freeAvailable; }
   } else {
     hint.innerHTML = `<span class="stars">${'★'.repeat(loy.stars)}${'☆'.repeat(10 - loy.stars)}</span><br><strong>${loy.stars}/10</strong> lavadas. Le faltan ${10 - loy.stars} para su próxima gratis.`;
     if(freeOpt) freeOpt.hidden = true;
@@ -882,7 +969,12 @@ function switchView(v){
     $('#adminBtn').classList.remove('active');
   }
 
-  if(v === 'checkin') updateSummary();
+  if(v === 'checkin'){
+    updateSummary();
+    renderServicesGrid();       /* re-render defensivo */
+    renderWasherSelect(false);  /* re-render defensivo */
+    updateLoyaltyHint();
+  }
   if(v === 'vehicles') renderVehicles();
   if(v === 'cash') renderCashView();
   if(v === 'team') renderTeamView();
@@ -968,7 +1060,6 @@ function openWhatsApp(phone, text){
   const w = window.open(url, '_blank');
   if(!w) window.location.href = url;
 }
-
 function getLoyaltyMessageLine(v){
   if(v.isFreeWash){
     const loy = getLoyaltyInfo(v.phone);
@@ -984,7 +1075,6 @@ function getLoyaltyMessageLine(v){
   }
   return `⭐ Tarjeta de fidelidad: ${willBeNumber}/10 lavadas. Te faltan ${10 - willBeNumber} para tu lavada gratis.`;
 }
-
 function buildCheckinMessage(v){
   const s = state.settings;
   const L = [];
@@ -1014,7 +1104,6 @@ function buildCheckinMessage(v){
   L.push(`_${s.businessName || 'ESPA Car Wash'}_`);
   return L.join('\n');
 }
-
 function buildReadyMessage(v){
   const s = state.settings;
   const L = [];
@@ -1050,7 +1139,6 @@ function resetForm(){
   renderWasherSelect(true);
   updateSummary();
 }
-
 function submitCheckin(){
   const plate  = $('#plateInput').value.trim().toUpperCase();
   const phone  = $('#phoneInput').value.trim();
@@ -1127,7 +1215,6 @@ function handleVehicleAction(id, act){
     save(); renderVehicles(); toast('Registro cancelado');
   }
 }
-
 function markVehicleReady(id){
   const v = state.vehicles.find(x => x.id === id);
   if(!v) return;
@@ -1141,10 +1228,7 @@ function markVehicleReady(id){
 /* ============================================================
    FOTOS
    ============================================================ */
-function openPhotoModal(){
-  renderPhotoGrid();
-  openModal('photoModal');
-}
+function openPhotoModal(){ renderPhotoGrid(); openModal('photoModal'); }
 function renderPhotoGrid(){
   const grid = $('#photoGrid');
   let html = '';
@@ -1160,25 +1244,16 @@ function renderPhotoGrid(){
 }
 async function shareWithPhotos(vehicle, photos){
   const message = buildReadyMessage(vehicle);
-  if(!photos.length){
-    openWhatsApp(vehicle.phone, message);
-    return;
-  }
+  if(!photos.length){ openWhatsApp(vehicle.phone, message); return; }
   if(navigator.canShare && navigator.canShare({ files: photos })){
-    try {
-      await navigator.share({ files: photos, text: message });
-      return;
-    } catch(e){
-      if(e.name === 'AbortError'){ openWhatsApp(vehicle.phone, message); return; }
-    }
+    try { await navigator.share({ files: photos, text: message }); return; }
+    catch(e){ if(e.name === 'AbortError'){ openWhatsApp(vehicle.phone, message); return; } }
   }
   photos.forEach((file, i) => {
     setTimeout(() => {
       const url = URL.createObjectURL(file);
       const a = document.createElement('a');
-      a.href = url;
-      a.download = file.name || `auto_listo_${i+1}.jpg`;
-      a.click();
+      a.href = url; a.download = file.name || `auto_listo_${i+1}.jpg`; a.click();
       setTimeout(() => URL.revokeObjectURL(url), 2000);
     }, i * 200);
   });
@@ -1193,7 +1268,6 @@ function confirmReadyAndNotify(){
   v.finishedAt = Date.now();
   save();
   const photos = pendingPhotos.slice();
-  const vid = readyVehicleId;
   readyVehicleId = null;
   pendingPhotos = [];
   closeModal('photoModal');
@@ -1207,9 +1281,7 @@ function confirmReadyAndNotify(){
    ============================================================ */
 let payVehicleId = null;
 let currentPayMethod = 'cash';
-
 function getCurrentTip(){ return Math.max(0, Number($('#tipInput').value) || 0); }
-
 function updatePayTotals(){
   const v = state.vehicles.find(x => x.id === payVehicleId);
   if(!v) return;
@@ -1222,7 +1294,6 @@ function updatePayTotals(){
   if(totalEl) totalEl.textContent = fmtMoney(total);
   updatePayCashHint(total);
 }
-
 function openPayModal(id){
   const v = state.vehicles.find(x => x.id === id);
   if(!v) return;
@@ -1252,7 +1323,6 @@ function updatePayCashHint(totalOverride){
     hint.style.color = 'var(--muted)';
   }
 }
-
 function confirmPay(){
   const v = state.vehicles.find(x => x.id === payVehicleId);
   if(!v) return;
@@ -1283,10 +1353,8 @@ function confirmPay(){
       state.cash.movements.unshift({
         id: uid(), type:'info', amount: tip,
         concept: `Propina ${v.washerName || 'lavador'} · ${v.plate}`,
-        plate: v.plate, vehicleId: v.id, isTip: true,
-        paymentMethod: pm,
-        washerId: v.washerId, washerName: v.washerName,
-        createdAt: Date.now()
+        plate: v.plate, vehicleId: v.id, isTip: true, paymentMethod: pm,
+        washerId: v.washerId, washerName: v.washerName, createdAt: Date.now()
       });
     }
   }
@@ -1294,7 +1362,6 @@ function confirmPay(){
   state.completedJobs.unshift({...v});
   state.vehicles = state.vehicles.filter(x => x.id !== v.id);
   save();
-
   closeModal('payModal');
   payVehicleId = null;
   renderVehicles();
@@ -1322,12 +1389,9 @@ function computeCashTotals(c){
     }
   });
   const initial = Number(c.initialAmount) || 0;
-  return {
-    cashIn, elecIn, cashOut, cashTips, elecTips, advances,
-    physicalCash: initial + cashIn - cashOut,
-    electronic: elecIn,
-    total: initial + cashIn + elecIn - cashOut
-  };
+  return { cashIn, elecIn, cashOut, cashTips, elecTips, advances,
+    physicalCash: initial + cashIn - cashOut, electronic: elecIn,
+    total: initial + cashIn + elecIn - cashOut };
 }
 function computeSessionTips(c){
   let cash = 0, elec = 0;
@@ -1338,32 +1402,24 @@ function computeSessionTips(c){
   });
   return { cash, elec, total: cash + elec };
 }
-
 function openCashRegister(initialAmount){
   state.cash.isOpen = true;
   state.cash.openedAt = Date.now();
   state.cash.closedAt = null;
   state.cash.initialAmount = Number(initialAmount) || 0;
   state.cash.movements = [];
-  save();
-  renderCashView(); updateTabs();
+  save(); renderCashView(); updateTabs();
   toast('Caja abierta');
 }
-
 function closeCashRegister(){
   const c = state.cash;
   const t = computeCashTotals(c);
   const tips = computeSessionTips(c);
   if(!confirm(`¿Cerrar la caja?\n\nEfectivo en caja: ${fmtMoney(t.physicalCash)}\nRecaudo electrónico: ${fmtMoney(t.electronic)}\nPropinas: ${fmtMoney(tips.total)}\nAdelantos: ${fmtMoney(t.advances)}\n\nSe descargarán 2 CSV automáticamente.`)) return;
-
   state.cashSessions.unshift({
-    id: uid(),
-    openedAt: c.openedAt,
-    closedAt: Date.now(),
-    initialAmount: c.initialAmount,
-    movements: c.movements.map(m => ({...m}))
+    id: uid(), openedAt: c.openedAt, closedAt: Date.now(),
+    initialAmount: c.initialAmount, movements: c.movements.map(m => ({...m}))
   });
-
   state.cash.lastClosed = {
     openedAt: c.openedAt, closedAt: Date.now(), initialAmount: c.initialAmount,
     cashIn: t.cashIn, elecIn: t.elecIn, cashOut: t.cashOut,
@@ -1374,15 +1430,11 @@ function closeCashRegister(){
   state.cash.isOpen = false;
   state.cash.closedAt = Date.now();
   state.cash.movements = [];
-  save();
-  renderCashView(); updateTabs();
+  save(); renderCashView(); updateTabs();
   toast('Caja cerrada · Exportando CSV…');
-  try {
-    setTimeout(() => downloadCashCSV(), 150);
-    setTimeout(() => downloadWashersCSV(), 800);
-  } catch(e){ console.warn(e); }
+  try { setTimeout(() => downloadCashCSV(), 150); setTimeout(() => downloadWashersCSV(), 800); }
+  catch(e){ console.warn(e); }
 }
-
 function addMovement(type, amount, concept){
   if(!state.cash.isOpen){ toast('Abre la caja primero'); return; }
   const amt = Number(amount);
@@ -1392,11 +1444,9 @@ function addMovement(type, amount, concept){
     id: uid(), type, amount: amt, concept: concept.trim(),
     paymentMethod: 'cash', createdAt: Date.now()
   });
-  save();
-  renderCashView();
+  save(); renderCashView();
   toast(type === 'in' ? 'Ingreso registrado' : 'Retiro registrado');
 }
-
 function addAdvance(workerId, amount, concept){
   if(!state.cash.isOpen){ toast('Abre la caja primero'); return; }
   const w = state.settings.washers.find(x => x.id === workerId);
@@ -1407,14 +1457,11 @@ function addAdvance(workerId, amount, concept){
   state.cash.movements.unshift({
     id: uid(), type: 'out', amount: amt, concept: label,
     paymentMethod: 'cash', isAdvance: true,
-    workerId: w.id, workerName: w.name,
-    createdAt: Date.now()
+    workerId: w.id, workerName: w.name, createdAt: Date.now()
   });
-  save();
-  renderCashView();
+  save(); renderCashView();
   toast(`Adelanto a ${w.name} registrado`);
 }
-
 function movementRowHtml(m){
   const pmLabel = m.paymentMethod ? ` · ${paymentMethodLabel(m.paymentMethod)}` : '';
   const badgeCls = m.paymentMethod === 'cash' ? 'cash'
@@ -1423,29 +1470,13 @@ function movementRowHtml(m){
   const badge = (m.paymentMethod && m.paymentMethod !== 'cash')
     ? `<span class="pay-method-badge ${badgeCls}">${paymentMethodLabel(m.paymentMethod)}</span>` : '';
   if(m.type === 'info'){
-    return `
-      <div class="movement tip info">
-        <div class="left">
-          <span class="concept">${esc(m.concept)} ${badge}</span>
-          <span class="meta">${fmtHour(m.createdAt)}${pmLabel} · incluida en el cobro</span>
-        </div>
-        <span class="amount" style="color:var(--muted)">${fmtMoney(m.amount)}</span>
-      </div>`;
+    return `<div class="movement tip info"><div class="left"><span class="concept">${esc(m.concept)} ${badge}</span><span class="meta">${fmtHour(m.createdAt)}${pmLabel} · incluida en el cobro</span></div><span class="amount" style="color:var(--muted)">${fmtMoney(m.amount)}</span></div>`;
   }
   const adv = m.isAdvance ? ' advance' : '';
-  return `
-    <div class="movement ${m.type} ${m.isTip?'tip':''}${adv}">
-      <div class="left">
-        <span class="concept">${esc(m.concept)} ${badge}</span>
-        <span class="meta">${fmtHour(m.createdAt)}${pmLabel}</span>
-      </div>
-      <span class="amount">${m.type === 'in' ? '+' : '−'} ${fmtMoney(m.amount)}</span>
-    </div>`;
+  return `<div class="movement ${m.type} ${m.isTip?'tip':''}${adv}"><div class="left"><span class="concept">${esc(m.concept)} ${badge}</span><span class="meta">${fmtHour(m.createdAt)}${pmLabel}</span></div><span class="amount">${m.type === 'in' ? '+' : '−'} ${fmtMoney(m.amount)}</span></div>`;
 }
-
 function renderCashView(){
   const c = state.cash;
-
   if(!c.isOpen){
     const last = c.lastClosed;
     let html = '';
@@ -1471,8 +1502,7 @@ function renderCashView(){
         <button type="button" class="btn btn-ghost btn-sm" data-download="cash-csv">⬇ Movimientos CSV</button>
         <button type="button" class="btn btn-ghost btn-sm" data-download="washers-csv">⬇ Lavadores CSV</button>
       </div>
-      <button type="button" class="btn btn-primary btn-block" id="openCashBtn">Abrir caja</button>
-    `;
+      <button type="button" class="btn btn-primary btn-block" id="openCashBtn">Abrir caja</button>`;
     $('#cashClosedState').innerHTML = html;
     $('#cashClosedState').hidden = false;
     $('#cashOpenState').hidden = true;
@@ -1482,13 +1512,11 @@ function renderCashView(){
     });
     return;
   }
-
   const t = computeCashTotals(c);
   const tips = computeSessionTips(c);
   const movementsHtml = c.movements.length
     ? c.movements.map(movementRowHtml).join('')
     : `<div class="empty-cash">Aún no hay movimientos.</div>`;
-
   $('#cashOpenState').innerHTML = `
     <div class="cash-hero">
       <div class="label">Efectivo en caja</div>
@@ -1518,17 +1546,14 @@ function renderCashView(){
       <button type="button" class="btn btn-ghost btn-sm" data-download="washers-csv">⬇ Lavadores CSV</button>
     </div>
     <h2 class="section-title">Movimientos</h2>
-    <div class="movements">${movementsHtml}</div>
-  `;
+    <div class="movements">${movementsHtml}</div>`;
   $('#cashClosedState').hidden = true;
   $('#cashOpenState').hidden = false;
-
   $('#btnAddIn').addEventListener('click', () => openMovementModal('in'));
   $('#btnAddOut').addEventListener('click', () => openMovementModal('out'));
   $('#btnAddAdvance').addEventListener('click', openAdvanceModal);
   $('#btnCloseCash').addEventListener('click', closeCashRegister);
 }
-
 let movementType = 'in';
 function openMovementModal(type){
   movementType = type;
@@ -1538,7 +1563,6 @@ function openMovementModal(type){
   $('#movConcept').value = '';
   openModal('movementModal');
 }
-
 function openAdvanceModal(){
   if(!state.settings.washers.length){ toast('No hay lavadores configurados'); return; }
   const sel = $('#advanceWorker');
@@ -1606,7 +1630,6 @@ function getAllMovements(){
 }
 function getTodayMovements(){ return getAllMovements().filter(m => isToday(m.createdAt)); }
 function getTodayJobs(){ return state.completedJobs.filter(j => isToday(j.completedAt || j.paidAt)); }
-
 function renderAdminDashboard(){
   const content = $('#adminContent');
   const todayJobs = getTodayJobs();
@@ -1614,13 +1637,12 @@ function renderAdminDashboard(){
   const advancesToday = todayMovements.filter(m => m.isAdvance);
   const realJobs = todayJobs.filter(j => !j.isFreeWash);
   const freeJobs = todayJobs.filter(j => j.isFreeWash);
-
   const totalRevenue = realJobs.reduce((a,j)=>a + (Number(j.totalPaid)||0), 0);
   const totalTips = realJobs.reduce((a,j)=>a + (Number(j.tip)||0), 0);
   const cashRevenue = realJobs.filter(j => j.paymentMethod === 'cash' || !j.paymentMethod).reduce((a,j)=>a + (Number(j.totalPaid)||0), 0);
   const elecRevenue = realJobs.filter(j => j.paymentMethod && j.paymentMethod !== 'cash').reduce((a,j)=>a + (Number(j.totalPaid)||0), 0);
-
   const cashTotals = computeCashTotals(state.cash);
+
   const allTipsByWorker = {};
   state.settings.washers.forEach(w => { allTipsByWorker[w.id] = { name: w.name, tips: 0, jobs: 0, advances: 0 }; });
   realJobs.forEach(j => {
@@ -1639,40 +1661,31 @@ function renderAdminDashboard(){
   const workerKeys = Object.keys(allTipsByWorker).filter(k => allTipsByWorker[k].jobs > 0 || allTipsByWorker[k].advances > 0);
 
   let html = '';
-
-  // Ingresos del día
-  html += `
-    <div class="admin-hero">
-      <div class="label">Ingresos del día</div>
-      <div class="amount">${fmtMoney(totalRevenue)}</div>
-      <div class="sub">${realJobs.length} lavada(s) paga(s) · ${freeJobs.length} gratis · ${todayJobs.length} total</div>
+  html += `<div class="admin-hero">
+    <div class="label">Ingresos del día</div>
+    <div class="amount">${fmtMoney(totalRevenue)}</div>
+    <div class="sub">${realJobs.length} lavada(s) paga(s) · ${freeJobs.length} gratis · ${todayJobs.length} total</div>
+  </div>
+  <div class="card">
+    <div class="admin-grid-2">
+      <div class="admin-mini"><div class="n">${fmtMoney(cashRevenue)}</div><div class="t">Efectivo</div></div>
+      <div class="admin-mini"><div class="n">${fmtMoney(elecRevenue)}</div><div class="t">Electrónico</div></div>
     </div>
-    <div class="card">
-      <div class="admin-grid-2">
-        <div class="admin-mini"><div class="n">${fmtMoney(cashRevenue)}</div><div class="t">Efectivo</div></div>
-        <div class="admin-mini"><div class="n">${fmtMoney(elecRevenue)}</div><div class="t">Electrónico</div></div>
-      </div>
-      <div style="margin-top:12px">
-        <div class="admin-row"><span class="lbl">Propinas del día</span><span class="val">${fmtMoney(totalTips)}</span></div>
-        <div class="admin-row big"><span class="lbl">Total recaudado</span><span class="val">${fmtMoney(totalRevenue)}</span></div>
-      </div>
-    </div>`;
+    <div style="margin-top:12px">
+      <div class="admin-row"><span class="lbl">Propinas del día</span><span class="val">${fmtMoney(totalTips)}</span></div>
+      <div class="admin-row big"><span class="lbl">Total recaudado</span><span class="val">${fmtMoney(totalRevenue)}</span></div>
+    </div>
+  </div>`;
 
-  // Caja actual
-  html += `
-    <div class="card">
-      <h3 class="card-title">Caja · ${state.cash.isOpen ? '🟢 Abierta' : '⚪ Cerrada'}</h3>
-      ${state.cash.isOpen ? `
-        <div class="admin-row"><span class="lbl">Efectivo en caja</span><span class="val" style="font-size:16px">${fmtMoney(cashTotals.physicalCash)}</span></div>
-        <div class="admin-row"><span class="lbl">Recaudo electrónico</span><span class="val">${fmtMoney(cashTotals.electronic)}</span></div>
-        <div class="admin-row"><span class="lbl">Adelantos del día</span><span class="val saldo-neg">${fmtMoney(cashTotals.advances)}</span></div>
-        <div class="admin-row"><span class="lbl">Movimientos hoy</span><span class="val">${todayMovements.length}</span></div>
-      ` : `
-        <p class="hint">La caja está cerrada. Abre la caja para registrar cobros y adelantos.</p>
-      `}
-    </div>`;
+  html += `<div class="card"><h3 class="card-title">Caja · ${state.cash.isOpen ? '🟢 Abierta' : '⚪ Cerrada'}</h3>
+    ${state.cash.isOpen ? `
+      <div class="admin-row"><span class="lbl">Efectivo en caja</span><span class="val" style="font-size:16px">${fmtMoney(cashTotals.physicalCash)}</span></div>
+      <div class="admin-row"><span class="lbl">Recaudo electrónico</span><span class="val">${fmtMoney(cashTotals.electronic)}</span></div>
+      <div class="admin-row"><span class="lbl">Adelantos del día</span><span class="val saldo-neg">${fmtMoney(cashTotals.advances)}</span></div>
+      <div class="admin-row"><span class="lbl">Movimientos hoy</span><span class="val">${todayMovements.length}</span></div>
+    ` : `<p class="hint">La caja está cerrada. Abre la caja para registrar cobros y adelantos.</p>`}
+  </div>`;
 
-  // Propinas por lavador
   if(workerKeys.length){
     html += `<div class="card"><h3 class="card-title">Propinas por lavador hoy</h3>`;
     workerKeys.forEach(k => {
@@ -1681,8 +1694,6 @@ function renderAdminDashboard(){
     });
     html += `</div>`;
   }
-
-  // Adelantos del día
   if(advancesToday.length){
     html += `<div class="card"><h3 class="card-title">Adelantos del día</h3>`;
     advancesToday.forEach(m => {
@@ -1693,8 +1704,6 @@ function renderAdminDashboard(){
     const totalAdv = advancesToday.reduce((a,m)=>a + (Number(m.amount)||0), 0);
     html += `<div class="admin-row big" style="border-top:1px solid var(--border);margin-top:6px;padding-top:8px"><span class="lbl">Total adelantos</span><span class="val saldo-neg">${fmtMoney(totalAdv)}</span></div></div>`;
   }
-
-  // Cruce de cuentas
   if(workerKeys.length){
     html += `<div class="card"><h3 class="card-title">Cruce de cuentas (propinas − adelantos)</h3>
       <p class="hint" style="margin-bottom:10px;font-size:12px">Positivo: el lavadero le debe al trabajador. Negativo: el trabajador debe al lavadero.</p>`;
@@ -1703,45 +1712,36 @@ function renderAdminDashboard(){
       const net = d.tips - d.advances;
       const cls = net >= 0 ? 'saldo-pos' : 'saldo-neg';
       const label = net >= 0 ? 'a favor' : 'debe';
-      html += `<div class="admin-row">
-        <span class="lbl">${esc(d.name)}</span>
-        <span class="val ${cls}">${net >= 0 ? '+' : ''}${fmtMoney(net)} <span style="font-size:11px;font-weight:500">(${label})</span></span></div>`;
+      html += `<div class="admin-row"><span class="lbl">${esc(d.name)}</span><span class="val ${cls}">${net >= 0 ? '+' : ''}${fmtMoney(net)} <span style="font-size:11px;font-weight:500">(${label})</span></span></div>`;
     });
     html += `</div>`;
   }
 
-  // Buscar cliente
-  html += `
-    <div class="card">
-      <h3 class="card-title">Buscar cliente por WhatsApp</h3>
-      <div style="display:flex;gap:8px">
-        <input type="tel" id="adminSearchPhone" placeholder="300 123 4567" style="flex:1">
-        <button type="button" class="btn btn-soft btn-sm" id="adminSearchBtn">Buscar</button>
-      </div>
-      <div id="adminSearchResult" style="margin-top:12px"></div>
-    </div>`;
+  html += `<div class="card">
+    <h3 class="card-title">Buscar cliente por WhatsApp</h3>
+    <div style="display:flex;gap:8px">
+      <input type="tel" id="adminSearchPhone" placeholder="300 123 4567" style="flex:1">
+      <button type="button" class="btn btn-soft btn-sm" id="adminSearchBtn">Buscar</button>
+    </div>
+    <div id="adminSearchResult" style="margin-top:12px"></div>
+  </div>`;
 
-  // Configuración admin
-  html += `
-    <div class="card">
-      <h3 class="card-title">Configuración admin</h3>
-      <label class="field-label" style="display:flex;align-items:center;gap:9px;margin-top:0">
-        <input type="checkbox" id="adminEnablePhotos" ${state.settings.enablePhotos?'checked':''} style="width:18px;height:18px;flex:0 0 auto">
-        <span>Permitir fotos del auto listo</span>
-      </label>
-      <p class="hint" style="margin-top:4px;font-size:12px">Cuando está activo, al marcar "Auto listo" se abre un panel para tomar 1-3 fotos y enviarlas al cliente por WhatsApp.</p>
-      <label class="field-label">Contraseña admin</label>
-      <input type="password" id="adminNewPassword" placeholder="Nueva contraseña">
-      <button type="button" class="btn btn-soft btn-block btn-sm" id="adminChangePasswordBtn" style="margin-top:8px">Actualizar contraseña</button>
-    </div>`;
-
-  // Cerrar sesión
-  html += `<button type="button" class="btn btn-danger btn-block" id="adminLogoutBottom">Cerrar sesión admin</button>`;
+  html += `<div class="card">
+    <h3 class="card-title">Configuración admin</h3>
+    <label class="field-label" style="display:flex;align-items:center;gap:9px;margin-top:0">
+      <input type="checkbox" id="adminEnablePhotos" ${state.settings.enablePhotos?'checked':''} style="width:18px;height:18px;flex:0 0 auto">
+      <span>Permitir fotos del auto listo</span>
+    </label>
+    <p class="hint" style="margin-top:4px;font-size:12px">Cuando está activo, al marcar "Auto listo" se abre un panel para tomar 1-3 fotos y enviarlas al cliente por WhatsApp.</p>
+    <label class="field-label">Contraseña admin</label>
+    <input type="password" id="adminNewPassword" placeholder="Nueva contraseña">
+    <button type="button" class="btn btn-soft btn-block btn-sm" id="adminChangePasswordBtn" style="margin-top:8px">Actualizar contraseña</button>
+  </div>
+  <button type="button" class="btn btn-danger btn-block" id="adminLogoutBottom">Cerrar sesión admin</button>`;
 
   content.innerHTML = html;
   wireAdminEvents();
 }
-
 function wireAdminEvents(){
   const photos = $('#adminEnablePhotos');
   if(photos){
@@ -1763,17 +1763,12 @@ function wireAdminEvents(){
     });
   }
   const searchBtn = $('#adminSearchBtn');
-  if(searchBtn){
-    searchBtn.addEventListener('click', adminSearchCustomer);
-  }
+  if(searchBtn) searchBtn.addEventListener('click', adminSearchCustomer);
   const searchInp = $('#adminSearchPhone');
-  if(searchInp){
-    searchInp.addEventListener('keypress', e => { if(e.key === 'Enter') adminSearchCustomer(); });
-  }
+  if(searchInp) searchInp.addEventListener('keypress', e => { if(e.key === 'Enter') adminSearchCustomer(); });
   const lo1 = $('#adminLogoutBottom');
   if(lo1) lo1.addEventListener('click', adminLogout);
 }
-
 function adminSearchCustomer(){
   const phone = ($('#adminSearchPhone').value || '').trim();
   const result = $('#adminSearchResult');
@@ -1794,8 +1789,7 @@ function adminSearchCustomer(){
     <div class="admin-row"><span class="lbl">Lavadas pagas</span><span class="val">${loy.totalWashes}</span></div>
     <div class="admin-row"><span class="lbl">Estrellas actuales</span><span class="val">${loy.stars}/10</span></div>
     <div class="admin-row"><span class="lbl">Lavadas gratis usadas</span><span class="val">${loy.freeUsed}</span></div>
-    <div class="admin-row big"><span class="lbl">Lavadas gratis disponibles</span><span class="val saldo-pos">${loy.freeAvailable}</span></div>
-  `;
+    <div class="admin-row big"><span class="lbl">Lavadas gratis disponibles</span><span class="val saldo-pos">${loy.freeAvailable}</span></div>`;
   if(jobs.length){
     html += `<p class="hint" style="margin-top:12px;font-size:12px"><strong>Últimas visitas:</strong></p>`;
     jobs.slice(0, 8).forEach(j => {
@@ -1805,7 +1799,6 @@ function adminSearchCustomer(){
   }
   result.innerHTML = html;
 }
-
 function adminLogout(){
   adminAuthed = false;
   switchView(lastNonAdminView || 'checkin');
@@ -1869,7 +1862,6 @@ function buildCashCSV(){
 function buildWashersCSV(){
   const headers = ['Lavador','Autos hoy','Tips hoy','Adelantos hoy','Saldo hoy','Autos histórico','Tips histórico'];
   const rows = [csvRow(headers)];
-  const todayJobs = getTodayJobs();
   const todayAdvances = getTodayMovements().filter(m => m.isAdvance);
   state.settings.washers.forEach(w => {
     const s = computeScore(w.id);
@@ -1920,7 +1912,6 @@ function closeModal(modal){
    AJUSTES
    ============================================================ */
 const ACCENTS = ['#2563eb','#0d9488','#16a34a','#7c3aed','#db2777','#ea580c','#475569'];
-
 function fillSettings(){
   const s = state.settings;
   $('#setName').value = s.businessName || '';
@@ -1964,7 +1955,6 @@ function renderSettingsWashers(){
       <button type="button" class="icon-btn danger" data-wdel="1"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
     </div>`).join('');
 }
-
 $('#servicesEditor').addEventListener('input', e => {
   const input = e.target;
   const field = input.dataset.field;
@@ -2022,7 +2012,6 @@ $('#addWasherBtn').addEventListener('click', () => {
   const last = $('#washersEditor').lastElementChild;
   if(last) last.querySelector('.washer-name').focus();
 });
-
 $('#setName').addEventListener('input', e => { state.settings.businessName = e.target.value; save(); renderBrand(); });
 $('#setTagline').addEventListener('input', e => { state.settings.tagline = e.target.value; save(); renderBrand(); });
 $('#setParkRate').addEventListener('input', e => { state.settings.parkingRate = Number(e.target.value) || 0; save(); updateParkingUI(); });
@@ -2036,7 +2025,6 @@ $('#setCurrency').addEventListener('input', e => {
   if(currentView === 'cash') renderCashView();
   if(currentView === 'team') renderTeamView();
 });
-
 $('#uploadLogoBtn').addEventListener('click', () => $('#logoInput').click());
 $('#removeLogoBtn').addEventListener('click', () => { state.settings.logo = null; save(); renderBrand(); fillSettings(); });
 $('#logoInput').addEventListener('change', async e => {
@@ -2063,7 +2051,6 @@ function resizeImage(file, max){
     img.src = url;
   });
 }
-
 $$('[data-theme-set]').forEach(btn => btn.addEventListener('click', () => {
   state.settings.theme = btn.dataset.themeSet;
   save(); applyTheme(); fillSettings();
@@ -2074,7 +2061,6 @@ $('#swatches').addEventListener('click', e => {
   state.settings.accent = sw.dataset.color;
   save(); applyTheme(); fillSettings();
 });
-
 $('#resetAllBtn').addEventListener('click', () => {
   if(!confirm('Se borrarán TODOS los datos. ¿Continuar?')) return;
   localStorage.removeItem(LS_KEY);
@@ -2155,7 +2141,6 @@ document.addEventListener('click', e => {
   if(!card) return;
   handleVehicleAction(card.dataset.id, btn.dataset.act);
 });
-
 document.addEventListener('click', e => {
   const btn = e.target.closest('[data-download]');
   if(!btn) return;
@@ -2163,8 +2148,6 @@ document.addEventListener('click', e => {
   if(kind === 'cash-csv') downloadCashCSV();
   else if(kind === 'washers-csv') downloadWashersCSV();
 });
-
-/* Admin button */
 $('#adminBtn').addEventListener('click', () => {
   if(currentView === 'admin' && adminAuthed){
     switchView(lastNonAdminView || 'checkin');
@@ -2191,7 +2174,6 @@ $('#adminPasswordInput').addEventListener('keypress', e => {
 });
 $('#adminLogoutBtn').addEventListener('click', adminLogout);
 
-/* Settings */
 document.addEventListener('click', e => {
   const btn = e.target.closest('#settingsBtn');
   if(!btn) return;
@@ -2199,8 +2181,6 @@ document.addEventListener('click', e => {
   try { openModal('settingsModal'); fillSettings(); }
   catch(err){ console.error(err); toast('Error abriendo ajustes'); }
 });
-
-/* Close modal */
 document.addEventListener('click', e => {
   const close = e.target.closest('[data-close]');
   if(!close) return;
@@ -2213,15 +2193,11 @@ document.addEventListener('keydown', e => {
     if(open) closeModal(open);
   }
 });
-
-/* Theme */
 $('#themeBtn').addEventListener('click', () => {
   state.settings.theme = state.settings.theme === 'dark' ? 'light' : 'dark';
   save(); applyTheme();
   if($('#settingsModal').classList.contains('open')) fillSettings();
 });
-
-/* Caja actions */
 $('#confirmOpenCash').addEventListener('click', () => {
   const amt = Number($('#cashInitialInput').value) || 0;
   closeModal('openCashModal');
@@ -2251,8 +2227,6 @@ $('#confirmAdvance').addEventListener('click', () => {
   closeModal('advanceModal');
   addAdvance(wid, amt, concept);
 });
-
-/* Pago */
 $('#payMethodSwitch').addEventListener('click', e => {
   const b = e.target.closest('.seg');
   if(!b) return;
@@ -2275,8 +2249,6 @@ $('#tipInput').addEventListener('input', () => {
   updatePayTotals();
 });
 $('#confirmPay').addEventListener('click', confirmPay);
-
-/* Fotos */
 $('#addPhotoBtn').addEventListener('click', () => $('#photoInput').click());
 $('#photoGrid').addEventListener('click', e => {
   if(e.target.closest('[data-add-photo]')){ $('#photoInput').click(); return; }
