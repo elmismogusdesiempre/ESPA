@@ -17,7 +17,7 @@
   --bg:#f3f5f9;--surface:#ffffff;--surface-2:#f7f9fc;
   --text:#0f172a;--muted:#66748b;--border:#e3e8f0;
   --shadow:0 1px 2px rgba(15,23,42,.05), 0 10px 28px -16px rgba(15,23,42,.25);
-  --radius:16px;--ok:#10b981;--danger:#ef4444;
+  --radius:16px;--ok:#10b981;--danger:#ef4444;--warn:#f59e0b;
 }
 [data-theme="dark"]{
   --bg:#080d17;--surface:#111a29;--surface-2:#0d1522;
@@ -34,7 +34,6 @@ img{max-width:100%;display:block}
 svg{display:block;pointer-events:none}
 body.has-summary main{padding-bottom:130px}
 
-/* HEADER */
 .app-header{position:sticky;top:0;z-index:30;background:var(--bg);border-bottom:1px solid var(--border)}
 .header-inner{max-width:920px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .brand{display:flex;align-items:center;gap:12px;min-width:0}
@@ -48,8 +47,8 @@ body.has-summary main{padding-bottom:130px}
 .icon-btn:hover{color:var(--text);border-color:var(--accent)}
 .icon-btn:active{transform:scale(.94)}
 .icon-btn.danger:hover{color:var(--danger);border-color:var(--danger)}
+.icon-btn.active{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
 
-/* LAYOUT */
 .container{max-width:920px;margin:0 auto;padding:14px 16px 0}
 .tabs{display:flex;gap:6px;background:var(--surface-2);padding:5px;border-radius:14px;border:1px solid var(--border);margin-bottom:14px;overflow-x:auto}
 .tab{flex:1;min-width:0;border:0;background:transparent;color:var(--muted);font-weight:600;font-size:13px;padding:10px 4px;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:.18s;white-space:nowrap}
@@ -59,7 +58,6 @@ body.has-summary main{padding-bottom:130px}
 .view{animation:fadeIn .22s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 
-/* CARDS */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
 .card-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:12px}
 .field-label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:12px 0 6px}
@@ -76,12 +74,10 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .hint{font-size:13px;color:var(--muted)}
 .hint strong{color:var(--text)}
 
-/* SEGMENTADO */
 .segmented{display:flex;gap:5px;background:var(--surface-2);padding:4px;border-radius:12px;border:1px solid var(--border);margin-bottom:16px}
 .seg{flex:1;border:0;background:transparent;color:var(--muted);font-weight:600;font-size:13px;padding:10px 4px;border-radius:9px;cursor:pointer;transition:.18s;white-space:nowrap}
 .seg.active{background:var(--accent);color:#fff;box-shadow:0 4px 12px -4px var(--accent)}
 
-/* SERVICIOS */
 .services{display:grid;grid-template-columns:1fr;gap:9px}
 @media(min-width:640px){.services{grid-template-columns:1fr 1fr}}
 .service{display:flex;align-items:center;gap:12px;padding:12px 13px;border:1.5px solid var(--border);border-radius:13px;background:var(--surface-2);cursor:pointer;transition:.16s;position:relative;user-select:none}
@@ -96,7 +92,13 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .service.selected .box{background:var(--accent);border-color:var(--accent)}
 .service.selected .box svg{opacity:1;transform:scale(1)}
 
-/* SUMMARY BAR */
+.loyalty-hint{margin-top:12px;padding:10px 12px;border-radius:10px;background:var(--surface-2);border:1px solid var(--border);font-size:13px;color:var(--muted);line-height:1.4}
+.loyalty-hint strong{color:var(--text)}
+.loyalty-hint .stars{color:var(--warn);font-size:15px;letter-spacing:1px}
+.free-wash-option{margin-top:10px;padding:11px 13px;border-radius:10px;border:1.5px solid var(--accent);background:var(--accent-soft);display:flex;align-items:center;gap:9px;cursor:pointer}
+.free-wash-option input{width:18px;height:18px;flex:0 0 auto}
+.free-wash-option span{font-size:13px;font-weight:600;color:var(--accent)}
+
 .summary{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--surface);border-top:1px solid var(--border);box-shadow:0 -10px 30px -22px rgba(0,0,0,.5);padding:11px 16px calc(11px + env(safe-area-inset-bottom));transform:translateY(115%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
 .summary.show{transform:none}
 .summary-inner{max-width:920px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px}
@@ -105,7 +107,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .summary-info strong{font-size:21px;font-weight:800;letter-spacing:-.02em;line-height:1.15}
 .summary-sub{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* BOTONES */
 .btn{border:0;border-radius:12px;padding:12px 18px;font-weight:650;font-size:14.5px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.16s;white-space:nowrap}
 .btn:active{transform:scale(.97)}
 .btn-primary{background:var(--accent);color:#fff;box-shadow:0 8px 20px -10px var(--accent)}
@@ -113,10 +114,10 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .btn-ghost:hover{color:var(--text);border-color:var(--accent)}
 .btn-soft{background:var(--accent-soft);color:var(--accent)}
 .btn-danger{background:transparent;color:var(--danger);border:1px solid var(--border)}
+.btn-warn{background:rgba(245,158,11,.14);color:var(--warn);border:1px solid rgba(245,158,11,.35)}
 .btn-block{width:100%}
 .btn-sm{padding:9px 13px;font-size:13px;border-radius:10px}
 
-/* VEHÍCULOS */
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
 .stat{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px 10px;text-align:center;box-shadow:var(--shadow)}
 .stat span{display:block;font-size:17px;font-weight:800;letter-spacing:-.02em}
@@ -130,6 +131,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .chip{font-size:11px;font-weight:700;padding:4px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.04em}
 .chip-in{background:var(--accent-soft);color:var(--accent)}
 .chip-ready{background:rgba(16,185,129,.14);color:var(--ok)}
+.chip-free{background:rgba(245,158,11,.18);color:var(--warn)}
 .vehicle-time{margin-left:auto;font-size:12px;color:var(--muted);font-weight:600}
 .vehicle-body{display:flex;flex-direction:column;gap:4px;padding:10px 0;border-top:1px dashed var(--border);border-bottom:1px dashed var(--border)}
 .line{display:flex;justify-content:space-between;gap:12px;font-size:13.5px}
@@ -142,7 +144,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .empty{text-align:center;padding:44px 20px;color:var(--muted);border:1.5px dashed var(--border);border-radius:var(--radius);font-size:14px}
 .empty strong{display:block;color:var(--text);font-size:15px;margin-bottom:4px}
 
-/* CAJA */
 .cash-hero{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:14px;box-shadow:var(--shadow);text-align:center}
 .cash-hero .label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px}
 .cash-hero .amount{font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1.1}
@@ -168,6 +169,8 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .movement.out .amount{color:var(--danger)}
 .movement.tip{border-left:3px solid var(--accent)}
 .movement.tip .concept::before{content:'💵 ';opacity:.6}
+.movement.advance{border-left:3px solid var(--warn)}
+.movement.advance .concept::before{content:'🤝 ';opacity:.6}
 .pay-method-badge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;padding:2px 6px;border-radius:5px;margin-left:4px}
 .pay-method-badge.cash{background:rgba(16,185,129,.14);color:var(--ok)}
 .pay-method-badge.transfer{background:var(--accent-soft);color:var(--accent)}
@@ -180,11 +183,9 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .summary-block .row span:first-child{color:var(--muted)}
 .summary-block .row strong{font-weight:700}
 
-/* DOWNLOAD BAR */
 .download-bar{display:flex;gap:8px;margin:14px 0;flex-wrap:wrap}
 .download-bar .btn{flex:1;min-width:130px}
 
-/* EQUIPO */
 .team-grid{display:grid;gap:10px}
 @media(min-width:640px){.team-grid{grid-template-columns:1fr 1fr}}
 .team-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow)}
@@ -198,6 +199,29 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .team-stats div:first-child{border-top:0}
 .team-stats span:first-child{color:var(--muted)}
 .team-stats span:last-child{font-weight:700}
+
+/* ADMIN */
+.admin-hero{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}
+.admin-hero .label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px}
+.admin-hero .amount{font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.admin-hero .sub{font-size:12px;color:var(--muted);margin-top:4px}
+.admin-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px dashed var(--border);font-size:13.5px;gap:12px}
+.admin-row:first-child{border-top:0;padding-top:0}
+.admin-row .lbl{color:var(--muted);min-width:0;overflow:hidden;text-overflow:ellipsis}
+.admin-row .val{font-weight:700;flex:0 0 auto}
+.admin-row.big{font-size:14px}
+.admin-row.big .val{font-size:16px}
+.admin-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.admin-mini{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:12px}
+.admin-mini .n{font-size:18px;font-weight:800;letter-spacing:-.02em}
+.admin-mini .t{font-size:11px;color:var(--muted);font-weight:600;margin-top:2px}
+.saldo-pos{color:var(--ok)}
+.saldo-neg{color:var(--danger)}
+.logout-btn{background:transparent;color:var(--danger);border:1px solid var(--border);border-radius:10px;padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer}
+.logout-btn:hover{border-color:var(--danger)}
+.auth-hero{max-width:400px;margin:40px auto;text-align:center;padding:32px 24px;background:var(--surface);border-radius:18px;border:1px solid var(--border);box-shadow:var(--shadow)}
+.auth-hero h2{font-size:20px;margin-bottom:8px}
+.auth-hero p{font-size:14px;color:var(--muted);margin-bottom:20px}
 
 /* MODALES */
 .modal{position:fixed;inset:0;z-index:100;display:none;align-items:flex-end;justify-content:center}
@@ -238,7 +262,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .washer-row input{background:var(--surface);font-size:14px;padding:10px 12px;font-weight:600}
 .washer-row .icon-btn{width:36px;height:36px;flex:0 0 auto}
 
-/* PAGO MODAL */
 .pay-summary{background:var(--surface-2);border-radius:12px;padding:14px;margin-bottom:16px}
 .pay-summary .plate-badge{font-size:18px;padding:8px 14px;display:inline-block;margin-bottom:6px}
 .pay-washer{font-size:13px;color:var(--muted)}
@@ -247,14 +270,18 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .pay-breakdown .row > span:last-child{font-weight:700;color:var(--text);flex:0 0 auto}
 .pay-breakdown .row.total{border-top:1px solid var(--border);margin-top:6px;padding-top:10px;color:var(--text);font-size:14px;font-weight:600}
 .pay-breakdown .row.total strong{font-size:22px;font-weight:800;letter-spacing:-.02em;color:var(--text)}
-.pay-total{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:16px;font-size:14px}
-.pay-total strong{font-size:22px;font-weight:800;letter-spacing:-.02em}
 .tip-quick{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
 .tip-quick button{padding:10px 4px;border:1.5px solid var(--border);background:var(--surface-2);border-radius:10px;font-size:12.5px;font-weight:700;cursor:pointer;transition:.15s;color:var(--muted)}
 .tip-quick button.active{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
 .tip-quick button:hover{border-color:var(--accent)}
 
-/* TOAST */
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.photo-item{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--surface-2);border:1px solid var(--border)}
+.photo-item img{width:100%;height:100%;object-fit:cover}
+.photo-item .remove{position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;border:0;font-size:14px;cursor:pointer;display:grid;place-items:center}
+.photo-slot{aspect-ratio:1;border-radius:10px;border:1.5px dashed var(--border);background:var(--surface-2);display:grid;place-items:center;color:var(--muted);font-size:22px;cursor:pointer;transition:.15s}
+.photo-slot:hover{border-color:var(--accent);color:var(--accent)}
+
 .toast{position:fixed;left:50%;bottom:104px;transform:translate(-50%,16px);background:#111827;color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;font-weight:500;opacity:0;pointer-events:none;transition:.25s;z-index:200;max-width:88vw;text-align:center;box-shadow:0 12px 30px -10px rgba(0,0,0,.5)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 </style>
@@ -271,6 +298,9 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
       </div>
     </div>
     <div class="header-actions">
+      <button type="button" class="icon-btn" id="adminBtn" aria-label="Panel admin">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </button>
       <button type="button" class="icon-btn" id="themeBtn" aria-label="Cambiar tema"></button>
       <button type="button" class="icon-btn" id="settingsBtn" aria-label="Ajustes"></button>
     </div>
@@ -299,6 +329,11 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
           <input id="phoneInput" type="tel" placeholder="300 123 4567" autocomplete="off" inputmode="tel">
         </div>
       </div>
+      <div id="loyaltyHint" class="loyalty-hint" hidden></div>
+      <label id="freeWashOption" class="free-wash-option" hidden>
+        <input type="checkbox" id="freeWashCheck">
+        <span>⭐ Redimir lavada gratis (tiene <span id="freeWashCount">0</span> disponible)</span>
+      </label>
       <label class="field-label">Lavador asignado</label>
       <select id="washerSelect"></select>
     </div>
@@ -342,6 +377,25 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 
   <section class="view" id="view-team" hidden>
     <div class="team-grid" id="teamGrid"></div>
+  </section>
+
+  <section class="view" id="view-admin" hidden>
+    <div id="adminAuthForm" hidden>
+      <div class="auth-hero">
+        <h2>🔒 Acceso administrador</h2>
+        <p>Ingresa la contraseña para ver el panel.</p>
+        <input type="password" id="adminPasswordInput" placeholder="Contraseña" autocomplete="off">
+        <button type="button" class="btn btn-primary btn-block" id="adminAuthBtn" style="margin-top:14px">Entrar</button>
+        <p class="hint" style="margin-top:14px;font-size:12px">Contraseña por defecto: <strong>admin</strong></p>
+      </div>
+    </div>
+    <div id="adminDashboard" hidden>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px;flex-wrap:wrap">
+        <h2 style="font-size:18px;font-weight:800;letter-spacing:-.01em">📊 Panel administrador</h2>
+        <button type="button" class="logout-btn" id="adminLogoutBtn">Cerrar sesión</button>
+      </div>
+      <div id="adminContent"></div>
+    </div>
   </section>
 </main>
 
@@ -401,7 +455,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 
       <section class="settings-section">
         <h3>Lavadores del equipo</h3>
-        <p class="hint" style="margin-bottom:10px">Agrega o quita a las personas que lavan los autos. Los autos en bahía de un lavador eliminado quedarán sin asignar (su historial se conserva).</p>
         <div id="washersEditor"></div>
         <button type="button" class="btn btn-soft btn-block btn-sm" id="addWasherBtn">+ Agregar lavador</button>
       </section>
@@ -479,53 +532,53 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
       <label class="field-label">Monto</label>
       <input type="number" id="movAmount" placeholder="20000" min="1" step="500" inputmode="numeric">
       <label class="field-label">Concepto</label>
-      <input id="movConcept" placeholder="Ej: Adelanto para almuerzo" autocomplete="off">
+      <input id="movConcept" placeholder="Ej: Compra de insumos" autocomplete="off">
       <p class="hint" style="margin-top:10px">Los movimientos manuales se asumen en efectivo.</p>
       <button type="button" class="btn btn-primary btn-block" id="confirmMov" style="margin-top:16px">Registrar</button>
     </div>
   </div>
 </div>
 
-<!-- COBRO / PROPINA -->
-<div class="modal" id="payModal">
+<!-- ADELANTO -->
+<div class="modal" id="advanceModal">
   <div class="modal-backdrop" data-close></div>
   <div class="modal-panel small">
     <div class="modal-head">
-      <h2>Cobro y entrega</h2>
+      <h2>Registrar adelanto</h2>
       <button type="button" class="icon-btn" data-close aria-label="Cerrar">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
     </div>
     <div class="modal-body">
-      <div class="pay-summary">
-        <span class="plate-badge" id="payPlate">ABC123</span>
-        <div class="pay-washer" id="payWasherInfo"></div>
-      </div>
+      <p class="hint" style="margin-bottom:12px">Adelanto a un lavador. Sale del efectivo de la caja y se descuenta en el cruce de cuentas.</p>
+      <label class="field-label">Lavador</label>
+      <select id="advanceWorker"></select>
+      <label class="field-label">Monto</label>
+      <input type="number" id="advanceAmount" placeholder="20000" min="1" step="500" inputmode="numeric">
+      <label class="field-label">Concepto (opcional)</label>
+      <input id="advanceConcept" placeholder="Ej: Para almuerzo" autocomplete="off">
+      <button type="button" class="btn btn-primary btn-block" id="confirmAdvance" style="margin-top:16px">Registrar adelanto</button>
+    </div>
+  </div>
+</div>
 
-      <label class="field-label" style="margin-top:0">Método de pago</label>
-      <div class="segmented" id="payMethodSwitch">
-        <button type="button" class="seg active" data-paymethod="cash">Efectivo</button>
-        <button type="button" class="seg" data-paymethod="transfer">Transfer.</button>
-        <button type="button" class="seg" data-paymethod="electronic">Tarjeta</button>
-      </div>
-
-      <label class="field-label" style="margin-top:0">Propina para el lavador (opcional)</label>
-      <div class="tip-quick" id="tipQuick">
-        <button type="button" data-tip="0" class="active">Sin tip</button>
-        <button type="button" data-tip="2000">$2.000</button>
-        <button type="button" data-tip="5000">$5.000</button>
-        <button type="button" data-tip="10000">$10.000</button>
-      </div>
-      <input type="number" id="tipInput" placeholder="Otro monto" min="0" step="500" inputmode="numeric">
-
-      <div class="pay-breakdown" style="margin-top:16px">
-        <div class="row"><span>Servicios</span><span id="paySubtotal">$0</span></div>
-        <div class="row"><span>Propina para el lavador</span><span id="payTipLine">$0</span></div>
-        <div class="row total"><span>Total a pagar</span><strong id="payTotal">$0</strong></div>
-      </div>
-
-      <div class="hint" id="payCashHint" style="margin:10px 0 0"></div>
-      <button type="button" class="btn btn-primary btn-block" id="confirmPay" style="margin-top:16px">Registrar cobro</button>
+<!-- FOTOS AUTO LISTO -->
+<div class="modal" id="photoModal">
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-panel small">
+    <div class="modal-head">
+      <h2>Fotos del auto listo</h2>
+      <button type="button" class="icon-btn" data-close aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p class="hint" style="margin-bottom:10px">Adjunta hasta 3 fotos del auto terminado. Se enviarán al cliente por WhatsApp para que vea que ya está listo.</p>
+      <div class="photo-grid" id="photoGrid"></div>
+      <input type="file" id="photoInput" accept="image/*" multiple hidden>
+      <button type="button" class="btn btn-ghost btn-block btn-sm" id="addPhotoBtn" style="margin-bottom:10px">📷 Añadir foto</button>
+      <button type="button" class="btn btn-primary btn-block" id="confirmReadyBtn">Marcar listo y avisar</button>
+      <p class="hint" style="text-align:center;margin-top:10px;font-size:12px">Omitir fotos es válido — se enviará el mensaje sin imágenes.</p>
     </div>
   </div>
 </div>
@@ -534,7 +587,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 
 <script>
 /* ============================================================
-   1. ICONOS
+   ICONOS
    ============================================================ */
 const ICON = {
   sun: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
@@ -545,7 +598,7 @@ const ICON = {
 };
 
 /* ============================================================
-   2. UTILIDADES
+   UTILIDADES
    ============================================================ */
 const $  = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => [...r.querySelectorAll(s)];
@@ -558,7 +611,7 @@ const isToday = ts => {
 };
 
 /* ============================================================
-   3. ESTADO
+   ESTADO
    ============================================================ */
 const LS_KEY = 'lavadero.v1';
 
@@ -587,19 +640,13 @@ function loadState(){
     settings:{
       businessName:'ESPA Car Wash',
       tagline:'Cuidamos tu vehículo',
-      logo:null,
-      theme:'light',
-      accent:'#2563eb',
-      currency:'$',
-      countryCode:'57',
-      parkingEnabled:true,
-      parkingRate:5000,
-      cashEnabled:true,
+      logo:null, theme:'light', accent:'#2563eb', currency:'$', countryCode:'57',
+      parkingEnabled:true, parkingRate:5000, cashEnabled:true,
+      adminPassword:'admin', enablePhotos:true,
       services: DEFAULT_SERVICES.map(s=>({...s})),
       washers: DEFAULT_WASHERS.map(w=>({...w}))
     },
-    vehicles:[],
-    completedJobs:[],
+    vehicles:[], completedJobs:[], cashSessions:[],
     cash:{ isOpen:false, openedAt:null, closedAt:null, initialAmount:0, movements:[], lastClosed:null }
   };
   if(!saved || typeof saved !== 'object') return base;
@@ -610,13 +657,13 @@ function loadState(){
 
   return {
     settings: {
-      ...base.settings,
-      ...st,
+      ...base.settings, ...st,
       services: (Array.isArray(st.services) && st.services.length) ? st.services : base.settings.services,
       washers:  Array.isArray(st.washers) ? st.washers : base.settings.washers
     },
     vehicles: Array.isArray(saved.vehicles) ? saved.vehicles : [],
     completedJobs: Array.isArray(saved.completedJobs) ? saved.completedJobs : [],
+    cashSessions: Array.isArray(saved.cashSessions) ? saved.cashSessions : [],
     cash
   };
 }
@@ -624,11 +671,13 @@ function loadState(){
 let state = loadState();
 const save = () => { try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){ console.warn(e); } };
 
-const draft = { mode:'wash', services:new Set(), hours:1 };
+const draft = { mode:'wash', services:new Set(), hours:1, isFreeWash:false };
 let currentView = 'checkin';
+let adminAuthed = false;
+let lastNonAdminView = 'checkin';
 
 /* ============================================================
-   4. FORMATEADORES
+   FORMATEADORES
    ============================================================ */
 function fmtMoney(n){
   const num = new Intl.NumberFormat('es-CO', { maximumFractionDigits:0 }).format(Math.round(n||0));
@@ -640,29 +689,20 @@ function fmtTime(m){
   const h = Math.floor(m/60), r = m%60;
   return r ? `${h} h ${r} min` : `${h} h`;
 }
-function fmtHour(ts){
-  return new Date(ts).toLocaleTimeString('es-CO', { hour:'numeric', minute:'2-digit' });
-}
-function fmtDateTime(ts){
-  return new Date(ts).toLocaleString('es-CO', { day:'2-digit', month:'short', hour:'numeric', minute:'2-digit' });
-}
-function paymentMethodLabel(pm){
-  return ({ cash:'Efectivo', transfer:'Transferencia', electronic:'Tarjeta/Electrónico' })[pm] || 'Efectivo';
-}
-function safeFilename(s){
-  return String(s || 'Lavadero').replace(/[^a-zA-Z0-9._-]+/g, '_').replace(/_+/g,'_').replace(/^_|_$/g,'') || 'Lavadero';
-}
+function fmtHour(ts){ return new Date(ts).toLocaleTimeString('es-CO', { hour:'numeric', minute:'2-digit' }); }
+function fmtDateTime(ts){ return new Date(ts).toLocaleString('es-CO', { day:'2-digit', month:'short', hour:'numeric', minute:'2-digit' }); }
+function paymentMethodLabel(pm){ return ({ cash:'Efectivo', transfer:'Transferencia', electronic:'Tarjeta/Electrónico' })[pm] || 'Efectivo'; }
+function safeFilename(s){ return String(s || 'Lavadero').replace(/[^a-zA-Z0-9._-]+/g, '_').replace(/_+/g,'_').replace(/^_|_$/g,'') || 'Lavadero'; }
 
 /* ============================================================
-   5. TEMA
+   TEMA
    ============================================================ */
 function applyAccent(hex){
   const dark = state.settings.theme === 'dark';
   const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex || '#2563eb');
   const r = parseInt(m ? m[1] : '25',16), g = parseInt(m ? m[2] : '99',16), b = parseInt(m ? m[3] : '235',16);
-  const root = document.documentElement.style;
-  root.setProperty('--accent', hex || '#2563eb');
-  root.setProperty('--accent-soft', `rgba(${r},${g},${b},${dark ? .22 : .10})`);
+  document.documentElement.style.setProperty('--accent', hex || '#2563eb');
+  document.documentElement.style.setProperty('--accent-soft', `rgba(${r},${g},${b},${dark ? .22 : .10})`);
 }
 function applyTheme(){
   document.documentElement.dataset.theme = state.settings.theme;
@@ -673,7 +713,7 @@ function applyTheme(){
 }
 
 /* ============================================================
-   6. MARCA
+   MARCA
    ============================================================ */
 function renderBrand(){
   const s = state.settings;
@@ -686,7 +726,7 @@ function renderBrand(){
 }
 
 /* ============================================================
-   7. SERVICIOS
+   SERVICIOS
    ============================================================ */
 function renderServicesGrid(){
   const grid = $('#servicesGrid');
@@ -710,7 +750,7 @@ function renderServicesGrid(){
 }
 
 /* ============================================================
-   8. LAVADORES
+   LAVADORES
    ============================================================ */
 function renderWasherSelect(force = false){
   const sel = $('#washerSelect');
@@ -728,18 +768,62 @@ function renderWasherSelect(force = false){
     active: state.vehicles.filter(v => v.washerId === w.id && v.status !== 'ready').length
   })).sort((a,b) => a.active - b.active);
   const suggested = counts[0]?.w.id;
-
   sel.innerHTML = '<option value="">Sin asignar</option>' + counts.map(({w, active}) => {
     const sug = w.id === suggested ? ' · sugerido' : '';
     return `<option value="${esc(w.id)}">${esc(w.name)} (${active} en bahía)${sug}</option>`;
   }).join('');
-
   if(prev && washers.some(w => w.id === prev)) sel.value = prev;
   else if(suggested) sel.value = suggested;
 }
 
 /* ============================================================
-   9. RESUMEN
+   FIDELIDAD
+   ============================================================ */
+function getLoyaltyInfo(phone){
+  if(!phone) return { totalWashes:0, stars:0, freeEarned:0, freeUsed:0, freeAvailable:0 };
+  const key = String(phone).replace(/\D/g,'');
+  const jobs = state.completedJobs.filter(j => String(j.phone||'').replace(/\D/g,'') === key);
+  const paidJobs = jobs.filter(j => !j.isFreeWash);
+  const freeUsed = jobs.filter(j => j.isFreeWash).length;
+  const totalWashes = paidJobs.length;
+  const stars = totalWashes % 10;
+  const freeEarned = Math.floor(totalWashes / 10);
+  const freeAvailable = Math.max(0, freeEarned - freeUsed);
+  return { totalWashes, stars, freeEarned, freeUsed, freeAvailable };
+}
+
+function updateLoyaltyHint(){
+  const phone = $('#phoneInput').value.trim();
+  const hint = $('#loyaltyHint');
+  const freeOpt = $('#freeWashOption');
+  if(!hint) return;
+  if(!phone || phone.replace(/\D/g,'').length < 7){
+    hint.hidden = true;
+    if(freeOpt) freeOpt.hidden = true;
+    return;
+  }
+  const loy = getLoyaltyInfo(phone);
+  hint.hidden = false;
+
+  if(loy.totalWashes === 0 && loy.freeUsed === 0){
+    hint.innerHTML = '🆕 <strong>Primera visita.</strong> ¡Bienvenido!';
+    if(freeOpt) freeOpt.hidden = true;
+    draft.isFreeWash = false;
+  } else if(loy.freeAvailable > 0){
+    hint.innerHTML = `⭐ Tiene <strong>${loy.freeAvailable} lavada(s) gratis</strong> disponible(s).<br><span class="stars">${'★'.repeat(loy.stars)}${'☆'.repeat(10 - loy.stars)}</span> · ${loy.stars}/10`;
+    if(freeOpt){
+      freeOpt.hidden = false;
+      $('#freeWashCount').textContent = loy.freeAvailable;
+    }
+  } else {
+    hint.innerHTML = `<span class="stars">${'★'.repeat(loy.stars)}${'☆'.repeat(10 - loy.stars)}</span><br><strong>${loy.stars}/10</strong> lavadas. Le faltan ${10 - loy.stars} para su próxima gratis.`;
+    if(freeOpt) freeOpt.hidden = true;
+    draft.isFreeWash = false;
+  }
+}
+
+/* ============================================================
+   RESUMEN
    ============================================================ */
 function draftTotals(){
   let total = 0, minutes = 0;
@@ -751,6 +835,7 @@ function draftTotals(){
       const s = state.settings.services.find(x=>x.id===id);
       if(s){ total += Number(s.price)||0; minutes += Number(s.minutes)||0; }
     });
+    if(draft.isFreeWash) total = 0;
   }
   return { total, minutes };
 }
@@ -759,22 +844,43 @@ function updateSummary(){
   $('#sumTotal').textContent = fmtMoney(total);
   let sub = 'Sin servicios';
   if(draft.mode === 'parking') sub = `${draft.hours} h de parqueadero`;
-  else if(draft.services.size) sub = `${draft.services.size} servicio${draft.services.size>1?'s':''} · ${fmtTime(minutes)}`;
+  else if(draft.services.size){
+    sub = `${draft.services.size} servicio${draft.services.size>1?'s':''} · ${fmtTime(minutes)}`;
+    if(draft.isFreeWash) sub += ' · ⭐ Lavada gratis';
+  }
   $('#sumTime').textContent = sub;
 }
 
 /* ============================================================
-   10. NAVEGACIÓN
+   NAVEGACIÓN
    ============================================================ */
 function switchView(v){
+  if(v !== 'admin' && currentView === 'admin') lastNonAdminView = v;
+  if(v !== 'admin') lastNonAdminView = v;
   currentView = v;
   $$('.tab').forEach(t => t.classList.toggle('active', t.dataset.view === v));
-  ['checkin','vehicles','cash','team'].forEach(id => {
+  ['checkin','vehicles','cash','team','admin'].forEach(id => {
     const el = $('#view-' + id);
     if(el) el.hidden = id !== v;
   });
   $('#summary').classList.toggle('show', v === 'checkin');
   document.body.classList.toggle('has-summary', v === 'checkin');
+
+  if(v === 'admin'){
+    if(adminAuthed){
+      $('#adminAuthForm').hidden = true;
+      $('#adminDashboard').hidden = false;
+      renderAdminDashboard();
+    } else {
+      $('#adminAuthForm').hidden = false;
+      $('#adminDashboard').hidden = true;
+      $('#adminPasswordInput').value = '';
+      setTimeout(() => { try{ $('#adminPasswordInput').focus(); }catch(e){} }, 100);
+    }
+    $('#adminBtn').classList.add('active');
+  } else {
+    $('#adminBtn').classList.remove('active');
+  }
 
   if(v === 'checkin') updateSummary();
   if(v === 'vehicles') renderVehicles();
@@ -789,7 +895,7 @@ function updateTabs(){
 }
 
 /* ============================================================
-   11. VEHÍCULOS
+   VEHÍCULOS
    ============================================================ */
 function vehicleCard(v){
   const isReady = v.status === 'ready';
@@ -804,6 +910,7 @@ function vehicleCard(v){
       <div class="vehicle-top">
         <span class="plate-badge">${esc(v.plate)}</span>
         <span class="chip ${isReady?'chip-ready':'chip-in'}">${isReady?'Listo':'En proceso'}</span>
+        ${v.isFreeWash ? '<span class="chip chip-free">⭐ Gratis</span>' : ''}
         <span class="vehicle-time">${fmtHour(v.createdAt)}</span>
       </div>
       <div class="vehicle-body">${body}</div>
@@ -843,7 +950,7 @@ function renderVehicles(){
 }
 
 /* ============================================================
-   12. WHATSAPP
+   WHATSAPP
    ============================================================ */
 function waNumber(raw){
   const text = String(raw || '').trim();
@@ -861,6 +968,23 @@ function openWhatsApp(phone, text){
   const w = window.open(url, '_blank');
   if(!w) window.location.href = url;
 }
+
+function getLoyaltyMessageLine(v){
+  if(v.isFreeWash){
+    const loy = getLoyaltyInfo(v.phone);
+    const remaining = Math.max(0, loy.freeAvailable - 1);
+    return remaining > 0
+      ? `⭐ Estás usando una de tus lavadas gratis. Te quedan ${remaining} disponibles.`
+      : `⭐ Estás usando tu lavada gratis. ¡Disfrútala!`;
+  }
+  const loy = getLoyaltyInfo(v.phone);
+  const willBeNumber = loy.stars + 1;
+  if(willBeNumber >= 10){
+    return `⭐ ¡Esta es tu lavada #10! Ganaste una *lavada gratis* para tu próxima visita. 🎉`;
+  }
+  return `⭐ Tarjeta de fidelidad: ${willBeNumber}/10 lavadas. Te faltan ${10 - willBeNumber} para tu lavada gratis.`;
+}
+
 function buildCheckinMessage(v){
   const s = state.settings;
   const L = [];
@@ -873,6 +997,7 @@ function buildCheckinMessage(v){
   } else {
     L.push('🧽 Servicios:');
     v.services.forEach(x => L.push(`• ${x.name}`));
+    if(v.isFreeWash) L.push('⭐ *Lavada gratis* redimida');
   }
   L.push('');
   L.push(`💰 Total: *${fmtMoney(v.total)}*`);
@@ -883,10 +1008,13 @@ function buildCheckinMessage(v){
     L.push(`🕒 Listo aprox. a las *${fmtHour(Date.now() + v.minutes*60000)}*`);
   }
   L.push('');
+  L.push(getLoyaltyMessageLine(v));
+  L.push('');
   L.push('¡Gracias por preferirnos!');
   L.push(`_${s.businessName || 'ESPA Car Wash'}_`);
   return L.join('\n');
 }
+
 function buildReadyMessage(v){
   const s = state.settings;
   const L = [];
@@ -897,13 +1025,15 @@ function buildReadyMessage(v){
   L.push('');
   L.push(`💰 Total a pagar: *${fmtMoney(v.total)}*`);
   L.push('');
+  L.push(getLoyaltyMessageLine(v));
+  L.push('');
   L.push('¡Te esperamos!');
   L.push(`_${s.businessName || 'ESPA Car Wash'}_`);
   return L.join('\n');
 }
 
 /* ============================================================
-   13. INGRESO
+   INGRESO
    ============================================================ */
 function resetForm(){
   $('#plateInput').value = '';
@@ -911,11 +1041,16 @@ function resetForm(){
   $('#phoneInput').value = '';
   draft.services.clear();
   draft.hours = 1;
+  draft.isFreeWash = false;
   $('#parkHours').value = 1;
+  const fw = $('#freeWashCheck'); if(fw) fw.checked = false;
+  $('#loyaltyHint').hidden = true;
+  $('#freeWashOption').hidden = true;
   renderServicesGrid();
   renderWasherSelect(true);
   updateSummary();
 }
+
 function submitCheckin(){
   const plate  = $('#plateInput').value.trim().toUpperCase();
   const phone  = $('#phoneInput').value.trim();
@@ -927,6 +1062,10 @@ function submitCheckin(){
   if(!phone){ toast('Ingresa el WhatsApp del cliente'); $('#phoneInput').focus(); return; }
   if(draft.mode === 'wash' && draft.services.size === 0){ toast('Selecciona al menos un servicio'); return; }
 
+  const loyCheck = getLoyaltyInfo(phone);
+  let isFreeWash = false;
+  if(draft.isFreeWash && draft.mode === 'wash' && loyCheck.freeAvailable > 0) isFreeWash = true;
+
   let items = [], total = 0, minutes = 0, parkingHours = 0;
   if(draft.mode === 'parking'){
     parkingHours = Number(draft.hours) || 1;
@@ -937,8 +1076,8 @@ function submitCheckin(){
       .map(id => state.settings.services.find(s => s.id === id))
       .filter(Boolean)
       .map(s => ({ id:s.id, name:s.name, price:Number(s.price)||0, minutes:Number(s.minutes)||0 }));
-    total   = items.reduce((a,s)=>a + s.price, 0);
     minutes = items.reduce((a,s)=>a + s.minutes, 0);
+    total = isFreeWash ? 0 : items.reduce((a,s)=>a + s.price, 0);
   }
 
   const vehicle = {
@@ -947,6 +1086,7 @@ function submitCheckin(){
     washerName: washer ? washer.name : null,
     type: draft.mode, services: items, parkingHours,
     total, minutes, status: 'in',
+    isFreeWash,
     createdAt: Date.now(), finishedAt: null, tip: 0
   };
 
@@ -961,17 +1101,22 @@ function submitCheckin(){
 }
 
 /* ============================================================
-   14. ACCIONES VEHÍCULO
+   ACCIONES VEHÍCULO
    ============================================================ */
+let readyVehicleId = null;
+let pendingPhotos = [];
+
 function handleVehicleAction(id, act){
   const v = state.vehicles.find(x => x.id === id);
   if(!v) return;
   if(act === 'ready'){
-    v.status = 'ready';
-    v.finishedAt = Date.now();
-    save(); renderVehicles();
-    toast('Aviso de "listo" enviado 🚗');
-    openWhatsApp(v.phone, buildReadyMessage(v));
+    if(state.settings.enablePhotos){
+      readyVehicleId = id;
+      pendingPhotos = [];
+      openPhotoModal();
+    } else {
+      markVehicleReady(id);
+    }
     return;
   }
   if(act === 'resend'){ openWhatsApp(v.phone, buildReadyMessage(v)); return; }
@@ -983,15 +1128,87 @@ function handleVehicleAction(id, act){
   }
 }
 
+function markVehicleReady(id){
+  const v = state.vehicles.find(x => x.id === id);
+  if(!v) return;
+  v.status = 'ready';
+  v.finishedAt = Date.now();
+  save(); renderVehicles();
+  toast('Aviso de "listo" enviado 🚗');
+  openWhatsApp(v.phone, buildReadyMessage(v));
+}
+
 /* ============================================================
-   15. PAGO / PROPINA
+   FOTOS
+   ============================================================ */
+function openPhotoModal(){
+  renderPhotoGrid();
+  openModal('photoModal');
+}
+function renderPhotoGrid(){
+  const grid = $('#photoGrid');
+  let html = '';
+  pendingPhotos.forEach((file, i) => {
+    const url = file.__url || URL.createObjectURL(file);
+    file.__url = url;
+    html += `<div class="photo-item"><img src="${url}" alt=""><button type="button" class="remove" data-photo-remove="${i}">✕</button></div>`;
+  });
+  for(let i = pendingPhotos.length; i < 3; i++){
+    html += `<button type="button" class="photo-slot" data-add-photo="1">📷</button>`;
+  }
+  grid.innerHTML = html;
+}
+async function shareWithPhotos(vehicle, photos){
+  const message = buildReadyMessage(vehicle);
+  if(!photos.length){
+    openWhatsApp(vehicle.phone, message);
+    return;
+  }
+  if(navigator.canShare && navigator.canShare({ files: photos })){
+    try {
+      await navigator.share({ files: photos, text: message });
+      return;
+    } catch(e){
+      if(e.name === 'AbortError'){ openWhatsApp(vehicle.phone, message); return; }
+    }
+  }
+  photos.forEach((file, i) => {
+    setTimeout(() => {
+      const url = URL.createObjectURL(file);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = file.name || `auto_listo_${i+1}.jpg`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+    }, i * 200);
+  });
+  openWhatsApp(vehicle.phone, message);
+  toast('Fotos descargadas. Adjúntalas en WhatsApp.');
+}
+function confirmReadyAndNotify(){
+  if(!readyVehicleId) return;
+  const v = state.vehicles.find(x => x.id === readyVehicleId);
+  if(!v){ closeModal('photoModal'); return; }
+  v.status = 'ready';
+  v.finishedAt = Date.now();
+  save();
+  const photos = pendingPhotos.slice();
+  const vid = readyVehicleId;
+  readyVehicleId = null;
+  pendingPhotos = [];
+  closeModal('photoModal');
+  renderVehicles();
+  toast('Vehículo listo ✅');
+  shareWithPhotos(v, photos);
+}
+
+/* ============================================================
+   PAGO / PROPINA
    ============================================================ */
 let payVehicleId = null;
 let currentPayMethod = 'cash';
 
-function getCurrentTip(){
-  return Math.max(0, Number($('#tipInput').value) || 0);
-}
+function getCurrentTip(){ return Math.max(0, Number($('#tipInput').value) || 0); }
 
 function updatePayTotals(){
   const v = state.vehicles.find(x => x.id === payVehicleId);
@@ -999,17 +1216,10 @@ function updatePayTotals(){
   const subtotal = Number(v.total) || 0;
   const tip = getCurrentTip();
   const total = subtotal + tip;
-
-  const subEl   = $('#paySubtotal');
-  const tipEl   = $('#payTipLine');
-  const totalEl = $('#payTotal');
-  if(subEl)   subEl.textContent   = fmtMoney(subtotal);
-  if(tipEl){
-    tipEl.textContent = tip > 0 ? '+ ' + fmtMoney(tip) : fmtMoney(0);
-    tipEl.style.color = tip > 0 ? 'var(--ok)' : '';
-  }
+  const subEl = $('#paySubtotal'), tipEl = $('#payTipLine'), totalEl = $('#payTotal');
+  if(subEl) subEl.textContent = fmtMoney(subtotal);
+  if(tipEl){ tipEl.textContent = tip > 0 ? '+ ' + fmtMoney(tip) : fmtMoney(0); tipEl.style.color = tip > 0 ? 'var(--ok)' : ''; }
   if(totalEl) totalEl.textContent = fmtMoney(total);
-
   updatePayCashHint(total);
 }
 
@@ -1018,25 +1228,19 @@ function openPayModal(id){
   if(!v) return;
   payVehicleId = id;
   currentPayMethod = 'cash';
-
   $('#payPlate').textContent = v.plate;
   $('#payWasherInfo').textContent = v.washerName ? `Lavador: ${v.washerName}` : 'Sin lavador asignado';
   $('#tipInput').value = '';
   $$('#tipQuick button').forEach(b => b.classList.toggle('active', b.dataset.tip === '0'));
   $$('#payMethodSwitch .seg').forEach(b => b.classList.toggle('active', b.dataset.paymethod === 'cash'));
-
   updatePayTotals();
   openModal('payModal');
 }
-
 function updatePayCashHint(totalOverride){
   const hint = $('#payCashHint');
   if(!hint) return;
   const v = state.vehicles.find(x => x.id === payVehicleId);
-  const total = (typeof totalOverride === 'number')
-    ? totalOverride
-    : ((Number(v && v.total) || 0) + getCurrentTip());
-
+  const total = (typeof totalOverride === 'number') ? totalOverride : ((Number(v && v.total) || 0) + getCurrentTip());
   if(!state.cash.isOpen){
     hint.textContent = `⚠️ La caja está cerrada. El cobro de ${fmtMoney(total)} no se registrará en caja.`;
     hint.style.color = 'var(--danger)';
@@ -1044,7 +1248,7 @@ function updatePayCashHint(totalOverride){
     hint.textContent = `Pago en efectivo por ${fmtMoney(total)}: sumará al efectivo físico de la caja.`;
     hint.style.color = 'var(--ok)';
   } else {
-    hint.textContent = `${paymentMethodLabel(currentPayMethod)} por ${fmtMoney(total)}: se registra como ingreso electrónico, no afecta el efectivo físico.`;
+    hint.textContent = `${paymentMethodLabel(currentPayMethod)} por ${fmtMoney(total)}: ingreso electrónico, no afecta efectivo físico.`;
     hint.style.color = 'var(--muted)';
   }
 }
@@ -1064,21 +1268,17 @@ function confirmPay(){
   v.completedAt = Date.now();
 
   if(state.cash.isOpen){
-    /* Movimiento del cobro: si hay propina se registra el total pagado y
-       la propina queda desglosada en un movimiento aparte para trazabilidad. */
     state.cash.movements.unshift({
       id: uid(), type:'in', amount: totalPaid,
       concept: `Cobro ${v.plate}${tip > 0 ? ` (incluye tip ${fmtMoney(tip)})` : ''}`,
-      plate: v.plate, vehicleId: v.id,
-      paymentMethod: pm,
+      plate: v.plate, vehicleId: v.id, paymentMethod: pm,
       services: v.services.map(s=>s.name).join(' + ') || (v.type === 'parking' ? `Parqueadero ${v.parkingHours}h` : ''),
       serviceType: v.type === 'parking' ? 'Parqueadero' : 'Lavado',
       client: v.client, washerId: v.washerId, washerName: v.washerName,
-      vehicleTotal: subtotal, tip: tip, totalPaid: totalPaid,
-      isTip: false,
+      vehicleTotal: subtotal, tip: tip, totalPaid: totalPaid, isTip: false,
+      isFreeWash: !!v.isFreeWash,
       createdAt: Date.now()
     });
-    /* Movimiento informativo de la propina (no suma al saldo: el cobro ya la incluye) */
     if(tip > 0){
       state.cash.movements.unshift({
         id: uid(), type:'info', amount: tip,
@@ -1101,45 +1301,40 @@ function confirmPay(){
   if(currentView === 'cash') renderCashView();
   if(currentView === 'team') renderTeamView();
   updateTabs();
-
   toast(`Cobro ${paymentMethodLabel(pm)} ${fmtMoney(totalPaid)}${tip>0?` (tip ${fmtMoney(tip)})`:''} ✅`);
 }
 
 /* ============================================================
-   16. CAJA
+   CAJA
    ============================================================ */
 function computeCashTotals(c){
-  let cashIn = 0, elecIn = 0, cashOut = 0, cashTips = 0, elecTips = 0;
+  let cashIn = 0, elecIn = 0, cashOut = 0, cashTips = 0, elecTips = 0, advances = 0;
   (c.movements || []).forEach(m => {
-    if(m.type === 'info') return; /* informativos: no afectan saldo */
+    if(m.type === 'info') return;
     const amt = Number(m.amount) || 0;
     if(m.type === 'in'){
       const isCash = (m.paymentMethod === 'cash' || !m.paymentMethod);
       if(isCash) cashIn += amt; else elecIn += amt;
-      if(m.isTip){
-        if(isCash) cashTips += amt; else elecTips += amt;
-      }
+      if(m.isTip){ if(isCash) cashTips += amt; else elecTips += amt; }
     } else {
       cashOut += amt;
+      if(m.isAdvance) advances += amt;
     }
   });
   const initial = Number(c.initialAmount) || 0;
   return {
-    cashIn, elecIn, cashOut, cashTips, elecTips,
+    cashIn, elecIn, cashOut, cashTips, elecTips, advances,
     physicalCash: initial + cashIn - cashOut,
     electronic: elecIn,
     total: initial + cashIn + elecIn - cashOut
   };
 }
-
-/* Suma de propinas registradas en la sesión (a partir de los cobros) */
 function computeSessionTips(c){
   let cash = 0, elec = 0;
   (c.movements || []).forEach(m => {
     if(m.type !== 'info' || !m.isTip) return;
     const amt = Number(m.amount) || 0;
-    if(m.paymentMethod === 'cash' || !m.paymentMethod) cash += amt;
-    else elec += amt;
+    if(m.paymentMethod === 'cash' || !m.paymentMethod) cash += amt; else elec += amt;
   });
   return { cash, elec, total: cash + elec };
 }
@@ -1159,12 +1354,18 @@ function closeCashRegister(){
   const c = state.cash;
   const t = computeCashTotals(c);
   const tips = computeSessionTips(c);
-  if(!confirm(`¿Cerrar la caja?\n\nEfectivo en caja: ${fmtMoney(t.physicalCash)}\nRecaudo electrónico: ${fmtMoney(t.electronic)}\nPropinas: ${fmtMoney(tips.total)}\n\nAl cerrar se descargarán automáticamente 2 archivos CSV.`)) return;
+  if(!confirm(`¿Cerrar la caja?\n\nEfectivo en caja: ${fmtMoney(t.physicalCash)}\nRecaudo electrónico: ${fmtMoney(t.electronic)}\nPropinas: ${fmtMoney(tips.total)}\nAdelantos: ${fmtMoney(t.advances)}\n\nSe descargarán 2 CSV automáticamente.`)) return;
 
-  state.cash.lastClosed = {
+  state.cashSessions.unshift({
+    id: uid(),
     openedAt: c.openedAt,
     closedAt: Date.now(),
     initialAmount: c.initialAmount,
+    movements: c.movements.map(m => ({...m}))
+  });
+
+  state.cash.lastClosed = {
+    openedAt: c.openedAt, closedAt: Date.now(), initialAmount: c.initialAmount,
     cashIn: t.cashIn, elecIn: t.elecIn, cashOut: t.cashOut,
     cashTips: tips.cash, elecTips: tips.elec,
     physicalCash: t.physicalCash, electronic: t.electronic, total: t.total,
@@ -1172,17 +1373,14 @@ function closeCashRegister(){
   };
   state.cash.isOpen = false;
   state.cash.closedAt = Date.now();
+  state.cash.movements = [];
   save();
   renderCashView(); updateTabs();
   toast('Caja cerrada · Exportando CSV…');
-
   try {
     setTimeout(() => downloadCashCSV(), 150);
     setTimeout(() => downloadWashersCSV(), 800);
-  } catch(e){
-    console.warn('No se pudo auto-exportar CSV', e);
-    toast('Caja cerrada. Descarga los CSV manualmente.');
-  }
+  } catch(e){ console.warn(e); }
 }
 
 function addMovement(type, amount, concept){
@@ -1192,12 +1390,29 @@ function addMovement(type, amount, concept){
   if(!concept.trim()){ toast('Escribe un concepto'); return; }
   state.cash.movements.unshift({
     id: uid(), type, amount: amt, concept: concept.trim(),
-    paymentMethod: 'cash',
-    createdAt: Date.now()
+    paymentMethod: 'cash', createdAt: Date.now()
   });
   save();
   renderCashView();
   toast(type === 'in' ? 'Ingreso registrado' : 'Retiro registrado');
+}
+
+function addAdvance(workerId, amount, concept){
+  if(!state.cash.isOpen){ toast('Abre la caja primero'); return; }
+  const w = state.settings.washers.find(x => x.id === workerId);
+  if(!w){ toast('Selecciona un lavador'); return; }
+  const amt = Number(amount);
+  if(!amt || amt <= 0){ toast('Monto inválido'); return; }
+  const label = concept.trim() ? `Adelanto ${w.name}: ${concept.trim()}` : `Adelanto ${w.name}`;
+  state.cash.movements.unshift({
+    id: uid(), type: 'out', amount: amt, concept: label,
+    paymentMethod: 'cash', isAdvance: true,
+    workerId: w.id, workerName: w.name,
+    createdAt: Date.now()
+  });
+  save();
+  renderCashView();
+  toast(`Adelanto a ${w.name} registrado`);
 }
 
 function movementRowHtml(m){
@@ -1206,9 +1421,7 @@ function movementRowHtml(m){
     : m.paymentMethod === 'transfer' ? 'transfer'
     : m.paymentMethod === 'electronic' ? 'electronic' : '';
   const badge = (m.paymentMethod && m.paymentMethod !== 'cash')
-    ? `<span class="pay-method-badge ${badgeCls}">${paymentMethodLabel(m.paymentMethod)}</span>`
-    : '';
-
+    ? `<span class="pay-method-badge ${badgeCls}">${paymentMethodLabel(m.paymentMethod)}</span>` : '';
   if(m.type === 'info'){
     return `
       <div class="movement tip info">
@@ -1219,9 +1432,9 @@ function movementRowHtml(m){
         <span class="amount" style="color:var(--muted)">${fmtMoney(m.amount)}</span>
       </div>`;
   }
-
+  const adv = m.isAdvance ? ' advance' : '';
   return `
-    <div class="movement ${m.type} ${m.isTip?'tip':''}">
+    <div class="movement ${m.type} ${m.isTip?'tip':''}${adv}">
       <div class="left">
         <span class="concept">${esc(m.concept)} ${badge}</span>
         <span class="meta">${fmtHour(m.createdAt)}${pmLabel}</span>
@@ -1248,14 +1461,10 @@ function renderCashView(){
           <div class="row"><span>Ingresos en efectivo</span><strong style="color:var(--ok)">+ ${fmtMoney(last.cashIn)}</strong></div>
           <div class="row"><span>Ingresos electrónicos</span><strong style="color:var(--accent)">${fmtMoney(last.elecIn)}</strong></div>
           <div class="row"><span>Retiros</span><strong style="color:var(--danger)">− ${fmtMoney(last.cashOut)}</strong></div>
-          <div class="row"><span>Propinas en efectivo</span><strong>${fmtMoney(last.cashTips)}</strong></div>
-          <div class="row"><span>Propinas electrónicas</span><strong>${fmtMoney(last.elecTips)}</strong></div>
           <div class="row total"><span>Efectivo entregado</span><strong>${fmtMoney(last.physicalCash)}</strong></div>
-          <div class="row"><span>Recaudo electrónico</span><strong>${fmtMoney(last.electronic)}</strong></div>
-        </div>
-      `;
+        </div>`;
     } else {
-      html = `<div class="empty-cash">Aún no hay ninguna sesión de caja.<br>Abre la caja al iniciar el día.</div>`;
+      html = `<div class="empty-cash">Aún no hay sesiones de caja.<br>Abre la caja al iniciar el día.</div>`;
     }
     html += `
       <div class="download-bar">
@@ -1289,20 +1498,21 @@ function renderCashView(){
     <div class="cash-stats">
       <div class="cash-stat"><div class="v">${fmtMoney(c.initialAmount)}</div><div class="l">Inicial</div></div>
       <div class="cash-stat in"><div class="v">${fmtMoney(t.cashIn)}</div><div class="l">Efectivo +</div></div>
-      <div class="cash-stat out"><div class="v">${fmtMoney(t.cashOut)}</div><div class="l">Retiros −</div></div>
+      <div class="cash-stat out"><div class="v">${fmtMoney(t.cashOut)}</div><div class="l">Salidas −</div></div>
     </div>
     <div class="summary-block">
       <div class="row"><span>Recaudo electrónico (no efectivo)</span><strong style="color:var(--accent)">${fmtMoney(t.electronic)}</strong></div>
       <div class="row"><span>Propinas en efectivo</span><strong>${fmtMoney(tips.cash)}</strong></div>
       <div class="row"><span>Propinas electrónicas</span><strong>${fmtMoney(tips.elec)}</strong></div>
-      <div class="row"><span>Total propinas (incluidas en cobros)</span><strong>${fmtMoney(tips.total)}</strong></div>
+      <div class="row"><span>Adelantos a lavadores</span><strong style="color:var(--warn)">${fmtMoney(t.advances)}</strong></div>
       <div class="row total"><span>Total general (efectivo + electrónico)</span><strong>${fmtMoney(t.total)}</strong></div>
     </div>
     <div class="cash-actions">
       <button type="button" class="btn btn-soft" id="btnAddIn">+ Ingreso</button>
+      <button type="button" class="btn btn-warn" id="btnAddAdvance">🤝 Adelanto</button>
       <button type="button" class="btn btn-ghost" id="btnAddOut">− Retiro</button>
-      <button type="button" class="btn btn-danger" id="btnCloseCash">Cerrar caja</button>
     </div>
+    <button type="button" class="btn btn-danger btn-block btn-sm" id="btnCloseCash" style="margin-bottom:14px">Cerrar caja</button>
     <div class="download-bar">
       <button type="button" class="btn btn-ghost btn-sm" data-download="cash-csv">⬇ Movimientos CSV</button>
       <button type="button" class="btn btn-ghost btn-sm" data-download="washers-csv">⬇ Lavadores CSV</button>
@@ -1315,6 +1525,7 @@ function renderCashView(){
 
   $('#btnAddIn').addEventListener('click', () => openMovementModal('in'));
   $('#btnAddOut').addEventListener('click', () => openMovementModal('out'));
+  $('#btnAddAdvance').addEventListener('click', openAdvanceModal);
   $('#btnCloseCash').addEventListener('click', closeCashRegister);
 }
 
@@ -1328,8 +1539,17 @@ function openMovementModal(type){
   openModal('movementModal');
 }
 
+function openAdvanceModal(){
+  if(!state.settings.washers.length){ toast('No hay lavadores configurados'); return; }
+  const sel = $('#advanceWorker');
+  sel.innerHTML = state.settings.washers.map(w => `<option value="${esc(w.id)}">${esc(w.name)}</option>`).join('');
+  $('#advanceAmount').value = '';
+  $('#advanceConcept').value = '';
+  openModal('advanceModal');
+}
+
 /* ============================================================
-   17. EQUIPO / SCORE
+   EQUIPO
    ============================================================ */
 function computeScore(washerId){
   const jobs = state.completedJobs.filter(j => j.washerId === washerId);
@@ -1339,31 +1559,19 @@ function computeScore(washerId){
   const todayJobsWithTip = todayJobs.filter(j => Number(j.tip) > 0).length;
   const totalJobsWithTip = jobs.filter(j => Number(j.tip) > 0).length;
   const active = state.vehicles.filter(v => v.washerId === washerId && v.status !== 'ready').length;
-  return {
-    active, todayCars: todayJobs.length, todayTips, todayJobsWithTip,
-    totalCars: jobs.length, totalTips, totalJobsWithTip
-  };
+  return { active, todayCars: todayJobs.length, todayTips, todayJobsWithTip, totalCars: jobs.length, totalTips, totalJobsWithTip };
 }
-
 function renderTeamView(){
   const wrap = $('#teamGrid');
-  const downloadBtn = `
-    <div style="grid-column:1/-1;display:flex;justify-content:flex-end;margin-bottom:10px">
-      <button type="button" class="btn btn-ghost btn-sm" data-download="washers-csv">⬇ Descargar CSV de lavadores</button>
-    </div>`;
-
+  const downloadBtn = `<div style="grid-column:1/-1;display:flex;justify-content:flex-end;margin-bottom:10px">
+    <button type="button" class="btn btn-ghost btn-sm" data-download="washers-csv">⬇ Descargar CSV de lavadores</button></div>`;
   if(!state.settings.washers.length){
-    wrap.innerHTML = downloadBtn + `<div class="empty" style="grid-column:1/-1">
-      <strong>Sin lavadores configurados</strong>
-      Agrégalos desde Ajustes.
-    </div>`;
+    wrap.innerHTML = downloadBtn + `<div class="empty" style="grid-column:1/-1"><strong>Sin lavadores configurados</strong>Agrégalos desde Ajustes.</div>`;
     return;
   }
-
   const rows = state.settings.washers.map(w => ({ washer: w, score: computeScore(w.id) }))
     .sort((a,b) => b.score.todayCars - a.score.todayCars || a.washer.name.localeCompare(b.washer.name));
   const medals = ['🥇','🥈','🥉'];
-
   wrap.innerHTML = downloadBtn + rows.map((r, idx) => {
     const s = r.score;
     const medal = s.todayCars > 0 && idx < 3 ? medals[idx] : '';
@@ -1388,43 +1596,242 @@ function renderTeamView(){
 }
 
 /* ============================================================
-   18. EXPORTACIÓN CSV
+   ADMIN
    ============================================================ */
-function csvEscape(v){
-  const s = String(v ?? '');
-  return '"' + s.replace(/"/g, '""') + '"';
+function getAllMovements(){
+  const all = [];
+  if(state.cash.isOpen) all.push(...state.cash.movements);
+  state.cashSessions.forEach(s => all.push(...(s.movements || [])));
+  return all;
 }
-function csvRow(arr){
-  return arr.map(csvEscape).join(',');
+function getTodayMovements(){ return getAllMovements().filter(m => isToday(m.createdAt)); }
+function getTodayJobs(){ return state.completedJobs.filter(j => isToday(j.completedAt || j.paidAt)); }
+
+function renderAdminDashboard(){
+  const content = $('#adminContent');
+  const todayJobs = getTodayJobs();
+  const todayMovements = getTodayMovements();
+  const advancesToday = todayMovements.filter(m => m.isAdvance);
+  const realJobs = todayJobs.filter(j => !j.isFreeWash);
+  const freeJobs = todayJobs.filter(j => j.isFreeWash);
+
+  const totalRevenue = realJobs.reduce((a,j)=>a + (Number(j.totalPaid)||0), 0);
+  const totalTips = realJobs.reduce((a,j)=>a + (Number(j.tip)||0), 0);
+  const cashRevenue = realJobs.filter(j => j.paymentMethod === 'cash' || !j.paymentMethod).reduce((a,j)=>a + (Number(j.totalPaid)||0), 0);
+  const elecRevenue = realJobs.filter(j => j.paymentMethod && j.paymentMethod !== 'cash').reduce((a,j)=>a + (Number(j.totalPaid)||0), 0);
+
+  const cashTotals = computeCashTotals(state.cash);
+  const allTipsByWorker = {};
+  state.settings.washers.forEach(w => { allTipsByWorker[w.id] = { name: w.name, tips: 0, jobs: 0, advances: 0 }; });
+  realJobs.forEach(j => {
+    if(j.washerId){
+      if(!allTipsByWorker[j.washerId]) allTipsByWorker[j.washerId] = { name: j.washerName || 'Retirado', tips: 0, jobs: 0, advances: 0 };
+      allTipsByWorker[j.washerId].tips += Number(j.tip) || 0;
+      allTipsByWorker[j.washerId].jobs += 1;
+    }
+  });
+  advancesToday.forEach(m => {
+    if(m.workerId){
+      if(!allTipsByWorker[m.workerId]) allTipsByWorker[m.workerId] = { name: m.workerName || 'Retirado', tips: 0, jobs: 0, advances: 0 };
+      allTipsByWorker[m.workerId].advances += Number(m.amount) || 0;
+    }
+  });
+  const workerKeys = Object.keys(allTipsByWorker).filter(k => allTipsByWorker[k].jobs > 0 || allTipsByWorker[k].advances > 0);
+
+  let html = '';
+
+  // Ingresos del día
+  html += `
+    <div class="admin-hero">
+      <div class="label">Ingresos del día</div>
+      <div class="amount">${fmtMoney(totalRevenue)}</div>
+      <div class="sub">${realJobs.length} lavada(s) paga(s) · ${freeJobs.length} gratis · ${todayJobs.length} total</div>
+    </div>
+    <div class="card">
+      <div class="admin-grid-2">
+        <div class="admin-mini"><div class="n">${fmtMoney(cashRevenue)}</div><div class="t">Efectivo</div></div>
+        <div class="admin-mini"><div class="n">${fmtMoney(elecRevenue)}</div><div class="t">Electrónico</div></div>
+      </div>
+      <div style="margin-top:12px">
+        <div class="admin-row"><span class="lbl">Propinas del día</span><span class="val">${fmtMoney(totalTips)}</span></div>
+        <div class="admin-row big"><span class="lbl">Total recaudado</span><span class="val">${fmtMoney(totalRevenue)}</span></div>
+      </div>
+    </div>`;
+
+  // Caja actual
+  html += `
+    <div class="card">
+      <h3 class="card-title">Caja · ${state.cash.isOpen ? '🟢 Abierta' : '⚪ Cerrada'}</h3>
+      ${state.cash.isOpen ? `
+        <div class="admin-row"><span class="lbl">Efectivo en caja</span><span class="val" style="font-size:16px">${fmtMoney(cashTotals.physicalCash)}</span></div>
+        <div class="admin-row"><span class="lbl">Recaudo electrónico</span><span class="val">${fmtMoney(cashTotals.electronic)}</span></div>
+        <div class="admin-row"><span class="lbl">Adelantos del día</span><span class="val saldo-neg">${fmtMoney(cashTotals.advances)}</span></div>
+        <div class="admin-row"><span class="lbl">Movimientos hoy</span><span class="val">${todayMovements.length}</span></div>
+      ` : `
+        <p class="hint">La caja está cerrada. Abre la caja para registrar cobros y adelantos.</p>
+      `}
+    </div>`;
+
+  // Propinas por lavador
+  if(workerKeys.length){
+    html += `<div class="card"><h3 class="card-title">Propinas por lavador hoy</h3>`;
+    workerKeys.forEach(k => {
+      const d = allTipsByWorker[k];
+      html += `<div class="admin-row"><span class="lbl">${esc(d.name)} <span style="color:var(--muted);font-size:11px">· ${d.jobs} auto(s)</span></span><span class="val saldo-pos">${fmtMoney(d.tips)}</span></div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Adelantos del día
+  if(advancesToday.length){
+    html += `<div class="card"><h3 class="card-title">Adelantos del día</h3>`;
+    advancesToday.forEach(m => {
+      html += `<div class="admin-row">
+        <span class="lbl">${esc(m.workerName || 'Lavador')}${m.concept && m.concept.includes(':') ? ' · ' + esc(m.concept.split(':').slice(1).join(':').trim()) : ''}</span>
+        <span class="val saldo-neg">− ${fmtMoney(m.amount)}</span></div>`;
+    });
+    const totalAdv = advancesToday.reduce((a,m)=>a + (Number(m.amount)||0), 0);
+    html += `<div class="admin-row big" style="border-top:1px solid var(--border);margin-top:6px;padding-top:8px"><span class="lbl">Total adelantos</span><span class="val saldo-neg">${fmtMoney(totalAdv)}</span></div></div>`;
+  }
+
+  // Cruce de cuentas
+  if(workerKeys.length){
+    html += `<div class="card"><h3 class="card-title">Cruce de cuentas (propinas − adelantos)</h3>
+      <p class="hint" style="margin-bottom:10px;font-size:12px">Positivo: el lavadero le debe al trabajador. Negativo: el trabajador debe al lavadero.</p>`;
+    workerKeys.forEach(k => {
+      const d = allTipsByWorker[k];
+      const net = d.tips - d.advances;
+      const cls = net >= 0 ? 'saldo-pos' : 'saldo-neg';
+      const label = net >= 0 ? 'a favor' : 'debe';
+      html += `<div class="admin-row">
+        <span class="lbl">${esc(d.name)}</span>
+        <span class="val ${cls}">${net >= 0 ? '+' : ''}${fmtMoney(net)} <span style="font-size:11px;font-weight:500">(${label})</span></span></div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Buscar cliente
+  html += `
+    <div class="card">
+      <h3 class="card-title">Buscar cliente por WhatsApp</h3>
+      <div style="display:flex;gap:8px">
+        <input type="tel" id="adminSearchPhone" placeholder="300 123 4567" style="flex:1">
+        <button type="button" class="btn btn-soft btn-sm" id="adminSearchBtn">Buscar</button>
+      </div>
+      <div id="adminSearchResult" style="margin-top:12px"></div>
+    </div>`;
+
+  // Configuración admin
+  html += `
+    <div class="card">
+      <h3 class="card-title">Configuración admin</h3>
+      <label class="field-label" style="display:flex;align-items:center;gap:9px;margin-top:0">
+        <input type="checkbox" id="adminEnablePhotos" ${state.settings.enablePhotos?'checked':''} style="width:18px;height:18px;flex:0 0 auto">
+        <span>Permitir fotos del auto listo</span>
+      </label>
+      <p class="hint" style="margin-top:4px;font-size:12px">Cuando está activo, al marcar "Auto listo" se abre un panel para tomar 1-3 fotos y enviarlas al cliente por WhatsApp.</p>
+      <label class="field-label">Contraseña admin</label>
+      <input type="password" id="adminNewPassword" placeholder="Nueva contraseña">
+      <button type="button" class="btn btn-soft btn-block btn-sm" id="adminChangePasswordBtn" style="margin-top:8px">Actualizar contraseña</button>
+    </div>`;
+
+  // Cerrar sesión
+  html += `<button type="button" class="btn btn-danger btn-block" id="adminLogoutBottom">Cerrar sesión admin</button>`;
+
+  content.innerHTML = html;
+  wireAdminEvents();
 }
+
+function wireAdminEvents(){
+  const photos = $('#adminEnablePhotos');
+  if(photos){
+    photos.addEventListener('change', e => {
+      state.settings.enablePhotos = e.target.checked;
+      save();
+      toast(e.target.checked ? 'Fotos activadas' : 'Fotos desactivadas');
+    });
+  }
+  const chPwd = $('#adminChangePasswordBtn');
+  if(chPwd){
+    chPwd.addEventListener('click', () => {
+      const np = ($('#adminNewPassword').value || '').trim();
+      if(np.length < 3){ toast('Mínimo 3 caracteres'); return; }
+      state.settings.adminPassword = np;
+      save();
+      $('#adminNewPassword').value = '';
+      toast('Contraseña actualizada');
+    });
+  }
+  const searchBtn = $('#adminSearchBtn');
+  if(searchBtn){
+    searchBtn.addEventListener('click', adminSearchCustomer);
+  }
+  const searchInp = $('#adminSearchPhone');
+  if(searchInp){
+    searchInp.addEventListener('keypress', e => { if(e.key === 'Enter') adminSearchCustomer(); });
+  }
+  const lo1 = $('#adminLogoutBottom');
+  if(lo1) lo1.addEventListener('click', adminLogout);
+}
+
+function adminSearchCustomer(){
+  const phone = ($('#adminSearchPhone').value || '').trim();
+  const result = $('#adminSearchResult');
+  if(!phone || phone.replace(/\D/g,'').length < 7){
+    result.innerHTML = '<p class="hint">Escribe un número de teléfono completo.</p>';
+    return;
+  }
+  const key = phone.replace(/\D/g,'');
+  const jobs = state.completedJobs.filter(j => String(j.phone||'').replace(/\D/g,'') === key);
+  const loy = getLoyaltyInfo(phone);
+  if(jobs.length === 0 && loy.totalWashes === 0){
+    result.innerHTML = '<p class="hint">No hay historial para este número.</p>';
+    return;
+  }
+  const name = (jobs[0] && jobs[0].client) || '—';
+  let html = `
+    <div class="admin-row"><span class="lbl">Cliente</span><span class="val">${esc(name)}</span></div>
+    <div class="admin-row"><span class="lbl">Lavadas pagas</span><span class="val">${loy.totalWashes}</span></div>
+    <div class="admin-row"><span class="lbl">Estrellas actuales</span><span class="val">${loy.stars}/10</span></div>
+    <div class="admin-row"><span class="lbl">Lavadas gratis usadas</span><span class="val">${loy.freeUsed}</span></div>
+    <div class="admin-row big"><span class="lbl">Lavadas gratis disponibles</span><span class="val saldo-pos">${loy.freeAvailable}</span></div>
+  `;
+  if(jobs.length){
+    html += `<p class="hint" style="margin-top:12px;font-size:12px"><strong>Últimas visitas:</strong></p>`;
+    jobs.slice(0, 8).forEach(j => {
+      const d = j.completedAt || j.paidAt;
+      html += `<div class="admin-row" style="font-size:12px"><span class="lbl">${fmtDateTime(d)} · ${esc(j.plate)}${j.isFreeWash ? ' ⭐ gratis' : ''}</span><span class="val">${fmtMoney(j.totalPaid != null ? j.totalPaid : j.total)}</span></div>`;
+    });
+  }
+  result.innerHTML = html;
+}
+
+function adminLogout(){
+  adminAuthed = false;
+  switchView(lastNonAdminView || 'checkin');
+  toast('Sesión admin cerrada');
+}
+
+/* ============================================================
+   EXPORTACIÓN CSV
+   ============================================================ */
+function csvEscape(v){ return '"' + String(v ?? '').replace(/"/g, '""') + '"'; }
+function csvRow(arr){ return arr.map(csvEscape).join(','); }
 function downloadFile(filename, content, mime){
   try {
     const blob = new Blob(['\uFEFF' + content], { type: mime || 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => {
-      try { document.body.removeChild(a); } catch(e){}
-      URL.revokeObjectURL(url);
-    }, 120);
+    a.href = url; a.download = filename; a.style.display = 'none';
+    document.body.appendChild(a); a.click();
+    setTimeout(() => { try{ document.body.removeChild(a); }catch(e){} URL.revokeObjectURL(url); }, 120);
     return true;
-  } catch(e){
-    console.error('Error descargando', e);
-    toast('No se pudo descargar el archivo');
-    return false;
-  }
+  } catch(e){ toast('No se pudo descargar'); return false; }
 }
-
 function findVehicleData(m){
   if(m && m.vehicleId){
-    const job = state.completedJobs.find(j => j.id === m.vehicleId);
-    if(job) return job;
-    const active = state.vehicles.find(v => v.id === m.vehicleId);
-    if(active) return active;
+    const j = state.completedJobs.find(j => j.id === m.vehicleId) || state.vehicles.find(v => v.id === m.vehicleId);
+    if(j) return j;
   }
   return null;
 }
@@ -1433,141 +1840,61 @@ function servicesText(v){
   if(v.type === 'parking') return `Parqueadero ${v.parkingHours||0}h`;
   return (v.services || []).map(s => s.name).join(' + ');
 }
-
 function buildCashCSV(){
-  const c = state.cash;
-  const headers = [
-    'Fecha','Hora','Tipo','Concepto','Placa','Cliente','Lavador',
-    'Tipo de servicio','Servicios contratados','Método de pago',
-    'Monto','Es propina','Total del servicio','Propina del servicio','Total pagado'
-  ];
+  const headers = ['Fecha','Hora','Tipo','Concepto','Placa','Cliente','Lavador','Servicio','Método','Monto','Es tip','Es adelanto','Total servicio','Propina','Total pagado'];
   const rows = [csvRow(headers)];
-  const movements = [...(c.movements||[])].sort((a,b)=>a.createdAt - b.createdAt);
-
-  movements.forEach(m => {
+  const all = getAllMovements().sort((a,b)=>a.createdAt - b.createdAt);
+  all.forEach(m => {
     const v = findVehicleData(m);
     const d = new Date(m.createdAt);
-    const vehTotal = m.vehicleTotal != null ? Number(m.vehicleTotal)
-      : (v ? Number(v.total) || 0 : '');
-    const vehTip = m.tip != null ? Number(m.tip)
-      : (v ? Number(v.tip) || 0 : '');
-    const totalPaid = m.totalPaid != null ? Number(m.totalPaid)
-      : (v ? (Number(v.totalPaid != null ? v.totalPaid : (Number(v.total)||0) + (Number(v.tip)||0))) : '');
-    const tipo = m.type === 'in' ? 'Ingreso' : (m.type === 'out' ? 'Retiro' : 'Propina (informativo)');
-
+    const tipo = m.type === 'in' ? 'Ingreso' : (m.type === 'out' ? (m.isAdvance ? 'Adelanto' : 'Retiro') : 'Propina (info)');
     rows.push(csvRow([
-      d.toLocaleDateString('es-CO'),
-      d.toLocaleTimeString('es-CO', { hour:'2-digit', minute:'2-digit' }),
-      tipo,
-      m.concept || '',
-      m.plate || (v && v.plate) || '',
-      (v && v.client) || m.client || '',
+      d.toLocaleDateString('es-CO'), d.toLocaleTimeString('es-CO', {hour:'2-digit',minute:'2-digit'}),
+      tipo, m.concept || '', m.plate || (v && v.plate) || '', (v && v.client) || m.client || '',
       m.washerName || (v && v.washerName) || '',
-      m.serviceType || (v ? (v.type === 'parking' ? 'Parqueadero' : 'Lavado') : ''),
       m.services || servicesText(v) || '',
       paymentMethodLabel(m.paymentMethod || 'cash'),
-      (m.type === 'out' ? '-' : '') + (Number(m.amount) || 0),
+      (m.type === 'out' ? '-' : '') + (Number(m.amount)||0),
       m.isTip ? 'Sí' : 'No',
-      vehTotal,
-      vehTip,
-      totalPaid
+      m.isAdvance ? 'Sí' : 'No',
+      v ? (Number(v.total)||0) : '',
+      v ? (Number(v.tip)||0) : '',
+      v ? (Number(v.totalPaid != null ? v.totalPaid : (Number(v.total)||0) + (Number(v.tip)||0))) : ''
     ]));
   });
-
-  const totals = computeCashTotals(c);
-  const tips = computeSessionTips(c);
   rows.push('');
-  rows.push(csvRow(['RESUMEN DE CAJA']));
-  rows.push(csvRow(['Monto inicial (efectivo)', c.initialAmount || 0]));
-  rows.push(csvRow(['Ingresos en efectivo', totals.cashIn]));
-  rows.push(csvRow(['Ingresos electrónicos', totals.elecIn]));
-  rows.push(csvRow(['Retiros', -totals.cashOut]));
-  rows.push(csvRow(['Propinas en efectivo (incluidas en cobros)', tips.cash]));
-  rows.push(csvRow(['Propinas electrónicas (incluidas en cobros)', tips.elec]));
-  rows.push(csvRow(['Total propinas', tips.total]));
-  rows.push(csvRow(['Efectivo entregado', totals.physicalCash]));
-  rows.push(csvRow(['Recaudo electrónico', totals.electronic]));
-  rows.push(csvRow(['Total general', totals.total]));
-  rows.push(csvRow(['Abierta', c.openedAt ? new Date(c.openedAt).toLocaleString('es-CO') : '']));
-  rows.push(csvRow(['Cerrada', c.closedAt ? new Date(c.closedAt).toLocaleString('es-CO') : 'Caja abierta (exportación parcial)']));
-  rows.push(csvRow(['Movimientos registrados', movements.length]));
-
-  const meta = [
-    csvRow([state.settings.businessName || 'ESPA Car Wash', '— Movimientos de caja']),
-    csvRow(['Generado', new Date().toLocaleString('es-CO')]),
-    ''
-  ];
-  return [...meta, ...rows].join('\r\n');
+  rows.push(csvRow(['Generado', new Date().toLocaleString('es-CO')]));
+  return [csvRow([state.settings.businessName || 'ESPA Car Wash']), ...rows].join('\r\n');
 }
-
 function buildWashersCSV(){
-  const headers = [
-    'Lavador','Autos hoy','Autos con propina hoy','Propinas hoy',
-    'Autos en bahía','Total autos histórico','Autos con propina histórico','Propinas totales'
-  ];
+  const headers = ['Lavador','Autos hoy','Tips hoy','Adelantos hoy','Saldo hoy','Autos histórico','Tips histórico'];
   const rows = [csvRow(headers)];
-
-  const washerList = state.settings.washers.slice();
-  const knownIds = new Set(washerList.map(w => w.id));
-  const orphanIds = new Set();
-  state.completedJobs.forEach(j => {
-    if(j.washerId && !knownIds.has(j.washerId)) orphanIds.add(j.washerId);
-  });
-
-  let totalCars = 0, totalTips = 0;
-
-  washerList.forEach(w => {
+  const todayJobs = getTodayJobs();
+  const todayAdvances = getTodayMovements().filter(m => m.isAdvance);
+  state.settings.washers.forEach(w => {
     const s = computeScore(w.id);
-    totalCars += s.totalCars;
-    totalTips += s.totalTips;
-    rows.push(csvRow([
-      w.name,
-      s.todayCars, s.todayJobsWithTip, s.todayTips,
-      s.active, s.totalCars, s.totalJobsWithTip, s.totalTips
-    ]));
+    const adv = todayAdvances.filter(m => m.workerId === w.id).reduce((a,m)=>a+(Number(m.amount)||0),0);
+    rows.push(csvRow([w.name, s.todayCars, s.todayTips, adv, s.todayTips - adv, s.totalCars, s.totalTips]));
   });
-
-  orphanIds.forEach(id => {
-    const job = state.completedJobs.find(j => j.washerId === id);
-    const name = (job && job.washerName) || 'Desconocido';
-    const s = computeScore(id);
-    totalCars += s.totalCars;
-    totalTips += s.totalTips;
-    rows.push(csvRow([
-      name + ' (retirado)',
-      s.todayCars, s.todayJobsWithTip, s.todayTips,
-      s.active, s.totalCars, s.totalJobsWithTip, s.totalTips
-    ]));
-  });
-
   rows.push('');
-  rows.push(csvRow(['TOTALES', '', '', '', '', totalCars, '', totalTips]));
-
-  const meta = [
-    csvRow([state.settings.businessName || 'ESPA Car Wash', '— Datos de lavadores']),
-    csvRow(['Generado', new Date().toLocaleString('es-CO')]),
-    ''
-  ];
-  return [...meta, ...rows].join('\r\n');
+  rows.push(csvRow(['Generado', new Date().toLocaleString('es-CO')]));
+  return [csvRow([state.settings.businessName || 'ESPA Car Wash']), ...rows].join('\r\n');
 }
-
 function downloadCashCSV(){
   const content = buildCashCSV();
   const date = new Date().toISOString().slice(0,10);
-  const fname = safeFilename(state.settings.businessName) + '_movimientos_' + date + '.csv';
-  const ok = downloadFile(fname, content);
-  if(ok) toast('Movimientos CSV descargado');
+  downloadFile(safeFilename(state.settings.businessName) + '_movimientos_' + date + '.csv', content);
+  toast('Movimientos CSV descargado');
 }
 function downloadWashersCSV(){
   const content = buildWashersCSV();
   const date = new Date().toISOString().slice(0,10);
-  const fname = safeFilename(state.settings.businessName) + '_lavadores_' + date + '.csv';
-  const ok = downloadFile(fname, content);
-  if(ok) toast('Lavadores CSV descargado');
+  downloadFile(safeFilename(state.settings.businessName) + '_lavadores_' + date + '.csv', content);
+  toast('Lavadores CSV descargado');
 }
 
 /* ============================================================
-   19. MODALES
+   MODALES
    ============================================================ */
 function openModal(id){
   const el = $('#' + id);
@@ -1585,80 +1912,56 @@ function closeModal(modal){
   if(!el) return;
   el.classList.remove('open');
   document.body.style.overflow = '';
-  if(id === 'settingsModal'){
-    renderServicesGrid();
-    updateSummary();
-    renderWasherSelect(false);
-  }
+  if(id === 'settingsModal'){ renderServicesGrid(); updateSummary(); renderWasherSelect(false); }
+  if(id === 'photoModal'){ readyVehicleId = null; pendingPhotos = []; }
 }
 
 /* ============================================================
-   20. AJUSTES
+   AJUSTES
    ============================================================ */
 const ACCENTS = ['#2563eb','#0d9488','#16a34a','#7c3aed','#db2777','#ea580c','#475569'];
 
 function fillSettings(){
   const s = state.settings;
-  $('#setName').value      = s.businessName || '';
-  $('#setTagline').value   = s.tagline || '';
-  $('#setParkRate').value  = s.parkingRate ?? 0;
+  $('#setName').value = s.businessName || '';
+  $('#setTagline').value = s.tagline || '';
+  $('#setParkRate').value = s.parkingRate ?? 0;
   $('#setParkEnabled').checked = !!s.parkingEnabled;
   $('#setCashEnabled').checked = !!s.cashEnabled;
-  $('#setCountry').value   = s.countryCode || '57';
-  $('#setCurrency').value  = s.currency || '$';
-
+  $('#setCountry').value = s.countryCode || '57';
+  $('#setCurrency').value = s.currency || '$';
   const prev = $('#logoPreview');
   prev.innerHTML = s.logo ? `<img src="${s.logo}" alt="Logo">` : 'Sin logo';
-
   $('#themeLight').classList.toggle('active', s.theme !== 'dark');
-  $('#themeDark').classList.toggle('active',  s.theme === 'dark');
-
+  $('#themeDark').classList.toggle('active', s.theme === 'dark');
   $('#swatches').innerHTML = ACCENTS.map(c =>
-    `<button type="button" class="swatch ${c.toLowerCase()===String(s.accent).toLowerCase()?'active':''}"
-             data-color="${c}" style="background:${c}" aria-label="Color ${c}"></button>`
+    `<button type="button" class="swatch ${c.toLowerCase()===String(s.accent).toLowerCase()?'active':''}" data-color="${c}" style="background:${c}"></button>`
   ).join('');
-
   renderSettingsServices();
   renderSettingsWashers();
 }
-
 function renderSettingsServices(){
   const wrap = $('#servicesEditor');
-  if(!state.settings.services.length){
-    wrap.innerHTML = `<p class="hint">No hay servicios. Agrega el primero.</p>`;
-    return;
-  }
+  if(!state.settings.services.length){ wrap.innerHTML = `<p class="hint">No hay servicios.</p>`; return; }
   wrap.innerHTML = state.settings.services.map(s => `
     <div class="srv" data-id="${esc(s.id)}">
       <div class="srv-top">
         <input class="srv-name" data-field="name" value="${esc(s.name)}" placeholder="Nombre del servicio">
-        <button type="button" class="icon-btn danger" data-del="1" title="Eliminar servicio">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
-        </button>
+        <button type="button" class="icon-btn danger" data-del="1"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
       </div>
       <div class="srv-bot">
-        <label class="mini"><span>Precio</span>
-          <input type="number" data-field="price" min="0" step="500" value="${Number(s.price)||0}" inputmode="numeric">
-        </label>
-        <label class="mini"><span>Minutos</span>
-          <input type="number" data-field="minutes" min="0" step="5" value="${Number(s.minutes)||0}" inputmode="numeric">
-        </label>
+        <label class="mini"><span>Precio</span><input type="number" data-field="price" min="0" step="500" value="${Number(s.price)||0}" inputmode="numeric"></label>
+        <label class="mini"><span>Minutos</span><input type="number" data-field="minutes" min="0" step="5" value="${Number(s.minutes)||0}" inputmode="numeric"></label>
       </div>
     </div>`).join('');
 }
-
 function renderSettingsWashers(){
   const wrap = $('#washersEditor');
-  if(!state.settings.washers.length){
-    wrap.innerHTML = `<p class="hint">No hay lavadores. Agrega al menos uno.</p>`;
-    return;
-  }
+  if(!state.settings.washers.length){ wrap.innerHTML = `<p class="hint">No hay lavadores.</p>`; return; }
   wrap.innerHTML = state.settings.washers.map(w => `
     <div class="washer-row" data-wid="${esc(w.id)}">
       <input class="washer-name" data-wfield="name" value="${esc(w.name)}" placeholder="Nombre del lavador">
-      <button type="button" class="icon-btn danger" data-wdel="1" title="Eliminar lavador">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
-      </button>
+      <button type="button" class="icon-btn danger" data-wdel="1"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
     </div>`).join('');
 }
 
@@ -1673,9 +1976,7 @@ $('#servicesEditor').addEventListener('input', e => {
   if(field === 'name') srv.name = input.value;
   else if(field === 'price') srv.price = Number(input.value) || 0;
   else if(field === 'minutes') srv.minutes = Number(input.value) || 0;
-  save();
-  renderServicesGrid();
-  updateSummary();
+  save(); renderServicesGrid(); updateSummary();
 });
 $('#servicesEditor').addEventListener('click', e => {
   const del = e.target.closest('[data-del]');
@@ -1685,20 +1986,14 @@ $('#servicesEditor').addEventListener('click', e => {
   const id = row.dataset.id;
   state.settings.services = state.settings.services.filter(s => s.id !== id);
   draft.services.delete(id);
-  save();
-  renderSettingsServices();
-  renderServicesGrid();
-  updateSummary();
+  save(); renderSettingsServices(); renderServicesGrid(); updateSummary();
 });
 $('#addServiceBtn').addEventListener('click', () => {
   state.settings.services.push({ id: uid(), name:'Nuevo servicio', price:0, minutes:30 });
-  save();
-  renderSettingsServices();
-  renderServicesGrid();
+  save(); renderSettingsServices(); renderServicesGrid();
   const last = $('#servicesEditor').lastElementChild;
   if(last) last.querySelector('.srv-name').focus();
 });
-
 $('#washersEditor').addEventListener('input', e => {
   const input = e.target;
   if(input.dataset.wfield !== 'name') return;
@@ -1707,9 +2002,7 @@ $('#washersEditor').addEventListener('input', e => {
   const w = state.settings.washers.find(x => x.id === row.dataset.wid);
   if(!w) return;
   w.name = input.value;
-  save();
-  renderWasherSelect(false);
-  renderVehicles();
+  save(); renderWasherSelect(false); renderVehicles();
 });
 $('#washersEditor').addEventListener('click', e => {
   const del = e.target.closest('[data-wdel]');
@@ -1718,20 +2011,14 @@ $('#washersEditor').addEventListener('click', e => {
   if(!row) return;
   const id = row.dataset.wid;
   const w = state.settings.washers.find(x => x.id === id);
-  if(w && !confirm(`¿Eliminar a "${w.name}"? Los autos en bahía quedarán sin lavador asignado. Su historial de propinas y autos se conserva.`)) return;
+  if(w && !confirm(`¿Eliminar a "${w.name}"? Los autos en bahía quedarán sin asignar.`)) return;
   state.settings.washers = state.settings.washers.filter(x => x.id !== id);
   state.vehicles.forEach(v => { if(v.washerId === id){ v.washerId = null; v.washerName = null; }});
-  save();
-  renderSettingsWashers();
-  renderWasherSelect(true);
-  renderVehicles();
-  renderTeamView();
+  save(); renderSettingsWashers(); renderWasherSelect(true); renderVehicles(); renderTeamView();
 });
 $('#addWasherBtn').addEventListener('click', () => {
   state.settings.washers.push({ id: uid(), name:'Nuevo lavador' });
-  save();
-  renderSettingsWashers();
-  renderWasherSelect(false);
+  save(); renderSettingsWashers(); renderWasherSelect(false);
   const last = $('#washersEditor').lastElementChild;
   if(last) last.querySelector('.washer-name').focus();
 });
@@ -1751,10 +2038,7 @@ $('#setCurrency').addEventListener('input', e => {
 });
 
 $('#uploadLogoBtn').addEventListener('click', () => $('#logoInput').click());
-$('#removeLogoBtn').addEventListener('click', () => {
-  state.settings.logo = null;
-  save(); renderBrand(); fillSettings();
-});
+$('#removeLogoBtn').addEventListener('click', () => { state.settings.logo = null; save(); renderBrand(); fillSettings(); });
 $('#logoInput').addEventListener('change', async e => {
   const file = e.target.files && e.target.files[0];
   if(!file) return;
@@ -1769,7 +2053,7 @@ function resizeImage(file, max){
     img.onload = () => {
       const scale = Math.min(1, max / Math.max(img.width, img.height));
       const c = document.createElement('canvas');
-      c.width  = Math.max(1, Math.round(img.width  * scale));
+      c.width = Math.max(1, Math.round(img.width * scale));
       c.height = Math.max(1, Math.round(img.height * scale));
       c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
       URL.revokeObjectURL(url);
@@ -1792,11 +2076,11 @@ $('#swatches').addEventListener('click', e => {
 });
 
 $('#resetAllBtn').addEventListener('click', () => {
-  if(!confirm('Se borrarán TODOS los datos: configuración, servicios, lavadores, vehículos, caja e historial. ¿Continuar?')) return;
+  if(!confirm('Se borrarán TODOS los datos. ¿Continuar?')) return;
   localStorage.removeItem(LS_KEY);
   state = loadState();
-  draft.services.clear();
-  draft.mode = 'wash';
+  adminAuthed = false;
+  draft.services.clear(); draft.mode = 'wash'; draft.isFreeWash = false;
   applyTheme(); renderBrand(); renderServicesGrid(); updateParkingUI();
   renderVehicles(); renderCashView(); renderTeamView(); updateTabs();
   closeModal('settingsModal');
@@ -1804,24 +2088,22 @@ $('#resetAllBtn').addEventListener('click', () => {
 });
 
 /* ============================================================
-   21. PARQUEADERO
+   PARQUEADERO
    ============================================================ */
 function updateParkingUI(){
   const s = state.settings;
   const seg = $('#modeSwitch');
-  if(!s.parkingEnabled){
-    seg.hidden = true;
-    if(draft.mode === 'parking') draft.mode = 'wash';
-  } else seg.hidden = false;
+  if(!s.parkingEnabled){ seg.hidden = true; if(draft.mode === 'parking') draft.mode = 'wash'; }
+  else seg.hidden = false;
   $$('.seg').forEach(b => b.classList.toggle('active', b.dataset.mode === draft.mode));
-  $('#washSection').hidden    = draft.mode !== 'wash';
+  $('#washSection').hidden = draft.mode !== 'wash';
   $('#parkingSection').hidden = draft.mode !== 'parking';
   $('#parkRateLabel').textContent = fmtMoney(s.parkingRate);
   updateSummary();
 }
 
 /* ============================================================
-   22. TOAST
+   TOAST
    ============================================================ */
 let toastTimer;
 function toast(msg){
@@ -1833,13 +2115,18 @@ function toast(msg){
 }
 
 /* ============================================================
-   23. EVENTOS GLOBALES
+   EVENTOS GLOBALES
    ============================================================ */
 $('#tabs').addEventListener('click', e => {
   const tab = e.target.closest('.tab');
   if(tab) switchView(tab.dataset.view);
 });
 $('#plateInput').addEventListener('input', e => { e.target.value = e.target.value.toUpperCase(); });
+$('#phoneInput').addEventListener('input', updateLoyaltyHint);
+$('#freeWashCheck').addEventListener('change', e => {
+  draft.isFreeWash = e.target.checked;
+  updateSummary();
+});
 $('#servicesGrid').addEventListener('change', e => {
   const cb = e.target.closest('input[type=checkbox]');
   if(!cb) return;
@@ -1869,7 +2156,6 @@ document.addEventListener('click', e => {
   handleVehicleAction(card.dataset.id, btn.dataset.act);
 });
 
-/* Descargas CSV */
 document.addEventListener('click', e => {
   const btn = e.target.closest('[data-download]');
   if(!btn) return;
@@ -1878,21 +2164,43 @@ document.addEventListener('click', e => {
   else if(kind === 'washers-csv') downloadWashersCSV();
 });
 
-/* Abrir ajustes */
+/* Admin button */
+$('#adminBtn').addEventListener('click', () => {
+  if(currentView === 'admin' && adminAuthed){
+    switchView(lastNonAdminView || 'checkin');
+  } else {
+    switchView('admin');
+  }
+});
+$('#adminAuthBtn').addEventListener('click', () => {
+  const pwd = ($('#adminPasswordInput').value || '').trim();
+  if(pwd === (state.settings.adminPassword || 'admin')){
+    adminAuthed = true;
+    $('#adminAuthForm').hidden = true;
+    $('#adminDashboard').hidden = false;
+    renderAdminDashboard();
+    toast('Bienvenido, admin');
+  } else {
+    toast('Contraseña incorrecta');
+    $('#adminPasswordInput').value = '';
+    $('#adminPasswordInput').focus();
+  }
+});
+$('#adminPasswordInput').addEventListener('keypress', e => {
+  if(e.key === 'Enter') $('#adminAuthBtn').click();
+});
+$('#adminLogoutBtn').addEventListener('click', adminLogout);
+
+/* Settings */
 document.addEventListener('click', e => {
   const btn = e.target.closest('#settingsBtn');
   if(!btn) return;
-  e.preventDefault();
-  e.stopPropagation();
-  try {
-    openModal('settingsModal');
-    fillSettings();
-  } catch(err) {
-    console.error('Error abriendo ajustes:', err);
-    toast('Error al abrir ajustes');
-  }
+  e.preventDefault(); e.stopPropagation();
+  try { openModal('settingsModal'); fillSettings(); }
+  catch(err){ console.error(err); toast('Error abriendo ajustes'); }
 });
 
+/* Close modal */
 document.addEventListener('click', e => {
   const close = e.target.closest('[data-close]');
   if(!close) return;
@@ -1906,18 +2214,19 @@ document.addEventListener('keydown', e => {
   }
 });
 
+/* Theme */
 $('#themeBtn').addEventListener('click', () => {
   state.settings.theme = state.settings.theme === 'dark' ? 'light' : 'dark';
   save(); applyTheme();
   if($('#settingsModal').classList.contains('open')) fillSettings();
 });
 
+/* Caja actions */
 $('#confirmOpenCash').addEventListener('click', () => {
   const amt = Number($('#cashInitialInput').value) || 0;
   closeModal('openCashModal');
   openCashRegister(amt);
 });
-
 $('#movTypeSwitch').addEventListener('click', e => {
   const b = e.target.closest('.seg');
   if(!b) return;
@@ -1933,8 +2242,17 @@ $('#confirmMov').addEventListener('click', () => {
   closeModal('movementModal');
   addMovement(movementType, amt, concept);
 });
+$('#confirmAdvance').addEventListener('click', () => {
+  const wid = $('#advanceWorker').value;
+  const amt = Number($('#advanceAmount').value);
+  const concept = $('#advanceConcept').value;
+  if(!wid){ toast('Selecciona un lavador'); return; }
+  if(!amt || amt <= 0){ toast('Monto inválido'); return; }
+  closeModal('advanceModal');
+  addAdvance(wid, amt, concept);
+});
 
-/* Método de pago */
+/* Pago */
 $('#payMethodSwitch').addEventListener('click', e => {
   const b = e.target.closest('.seg');
   if(!b) return;
@@ -1942,8 +2260,6 @@ $('#payMethodSwitch').addEventListener('click', e => {
   $$('#payMethodSwitch .seg').forEach(x => x.classList.toggle('active', x === b));
   updatePayCashHint();
 });
-
-/* Propina: botones rápidos + input => recalculan el total a pagar */
 $('#tipQuick').addEventListener('click', e => {
   const b = e.target.closest('[data-tip]');
   if(!b) return;
@@ -1958,16 +2274,37 @@ $('#tipInput').addEventListener('input', () => {
   });
   updatePayTotals();
 });
-
 $('#confirmPay').addEventListener('click', confirmPay);
 
+/* Fotos */
+$('#addPhotoBtn').addEventListener('click', () => $('#photoInput').click());
+$('#photoGrid').addEventListener('click', e => {
+  if(e.target.closest('[data-add-photo]')){ $('#photoInput').click(); return; }
+  const r = e.target.closest('[data-photo-remove]');
+  if(r){
+    const i = Number(r.dataset.photoRemove);
+    if(pendingPhotos[i] && pendingPhotos[i].__url) URL.revokeObjectURL(pendingPhotos[i].__url);
+    pendingPhotos.splice(i, 1);
+    renderPhotoGrid();
+  }
+});
+$('#photoInput').addEventListener('change', e => {
+  const files = Array.from(e.target.files || []);
+  for(const f of files){
+    if(pendingPhotos.length >= 3) break;
+    pendingPhotos.push(f);
+  }
+  e.target.value = '';
+  renderPhotoGrid();
+});
+$('#confirmReadyBtn').addEventListener('click', confirmReadyAndNotify);
+
 /* ============================================================
-   24. INICIALIZACIÓN
+   INICIALIZACIÓN
    ============================================================ */
 function init(){
   $('#themeBtn').innerHTML = ICON.moon;
   $('#settingsBtn').innerHTML = ICON.gear;
-
   applyTheme();
   renderBrand();
   renderServicesGrid();
